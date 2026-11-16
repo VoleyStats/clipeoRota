@@ -29,19 +29,20 @@ export async function saveJSON(key: string, value: unknown): Promise<void> {
 const PREFS_KEY = 'prefs';
 
 export interface Prefs {
-  profile: Profile;
-  mode: Mode;
+  /** Last modality chosen on the home screen (global). */
+  mode: Mode | null;
+  /** Last view opened, reopened directly on a cold start. */
+  profile: Profile | null;
 }
 
-export async function loadPrefs(): Promise<Prefs | null> {
+export async function loadPrefs(): Promise<Prefs> {
   const raw = await loadJSON(PREFS_KEY);
-  if (typeof raw !== 'object' || raw === null) return null;
-  const { profile, mode } = raw as Record<string, unknown>;
-  return isProfile(profile) && isMode(mode) ? { profile, mode } : null;
+  const { profile, mode } = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
+  return { profile: isProfile(profile) ? profile : null, mode: isMode(mode) ? mode : null };
 }
 
-export function savePrefs(prefs: Prefs): Promise<void> {
-  return saveJSON(PREFS_KEY, prefs);
+export async function savePrefs(changes: Partial<Prefs>): Promise<void> {
+  await saveJSON(PREFS_KEY, { ...(await loadPrefs()), ...changes });
 }
 
 /**

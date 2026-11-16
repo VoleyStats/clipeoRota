@@ -72,7 +72,7 @@ function RefereeScreen({ mode }: { mode: Mode }) {
   const sideBySide = width >= 700 || width > height;
 
   return (
-    <Screen back title={`${t.referee} · ${mode}`}>
+    <Screen back title={t.referee}>
       <ScrollView contentContainerStyle={styles.content}>
         {setMismatch && (
           <View style={styles.warning}>

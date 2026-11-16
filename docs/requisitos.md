@@ -14,13 +14,12 @@ AppLineup (Veiem360) sustituía la hoja de rotaciones en papel que el entrenador
 
 ## 2. Flujo de la app
 
-1. Al abrir la app, elegir perfil: **Entrenador** o **Árbitro**.
-2. Elegir modalidad: **3x3**, **4x4** o **6x6**.
-3. Entrar directamente a la vista de ese perfil.
+1. La pantalla inicial tiene, en una sola vista, un desplegable de **modalidad** (3x3, 4x4 o 6x6; elección global) y los dos roles: **Entrenador** y **Árbitro**.
+2. Al tocar un rol se entra directamente a su vista con la modalidad elegida.
 
-No hay registro, cuentas, menús ni más pantallas. Desde la vista de perfil se puede volver atrás para cambiar de perfil o de modalidad.
+No hay registro, cuentas, menús ni más pantallas. Desde la vista de un rol se vuelve a la pantalla inicial para cambiar de rol o de modalidad.
 
-- RF-00. **La app recuerda el último perfil y modalidad** y, al abrirse, entra directamente en esa vista.
+- RF-00. **La app recuerda la modalidad y el último rol** y, al abrirse, entra directamente en esa vista.
 
 ## 3. Modalidades
 
@@ -40,18 +39,18 @@ El líbero no entra en la rotación y la app no lo gestiona.
 - RF-01b. **Dorsales:** solo números del 1 al 99 (máximo 2 cifras). Los ceros a la izquierda se eliminan («07» se guarda como «7»).
 - RF-02. **Código de equipo:** exactamente 3 caracteres alfanuméricos, en mayúsculas (se convierten solos al escribir).
 - RF-03. **Sets:** una fila de botones, uno por set (1 a 5).
-  - El **set en curso** aparece resaltado y es el que se edita. La app lo lleva sola: empieza en el set 1 y avanza con el botón **Pasar al set N →**, que solo se activa cuando la rotación del set en curso está completa. Al avanzar, el set nuevo empieza en blanco.
+  - El **set en curso** aparece resaltado y es el que se edita. Empieza en el set 1. El botón del set siguiente se activa cuando el set en curso tiene QR (código y rotación completos); al tocarlo se pasa a ese set, que empieza en blanco. Los sets posteriores están desactivados.
   - Cada set guarda su propia rotación en el dispositivo (sobrevive a cerrar la app).
-  - Tocar el botón de un set anterior **copia su rotación** al set en curso como punto de partida. Si el set en curso ya tiene dorsales, la app pide confirmación antes de sustituirlos. Los sets futuros están desactivados.
-  - Botón **Nuevo partido**: borra todos los sets y vuelve al set 1 (con confirmación). El código de equipo se mantiene.
+  - Tocar el botón de un set anterior **copia su rotación** al set en curso como punto de partida. Si el set en curso ya tiene dorsales, la app pide confirmación antes de sustituirlos.   - **Nuevo partido**, en la cabecera: borra todos los sets y vuelve al set 1 (con confirmación). El código de equipo se mantiene.
   - Cada modalidad guarda su propio estado.
 - RF-04. **Botones Rotar ↻ y ↺:** mueven los dorsales una posición en un sentido o en el otro.
   - ↻ (sentido de rotación del voleibol, horario): ZN2 → ZN1, ZN3 → ZN2… ZN1 → última zona.
   - ↺ (sentido contrario): ZN1 → ZN2, ZN2 → ZN3… última zona → ZN1.
   - Funciona igual en 3x3, 4x4 y 6x6.
-- RF-05. **QR:** se muestra en la misma vista, generado con el código de equipo y los dorsales (formato en la sección 6), y se actualiza solo al escribir o rotar.
-- RF-06. **Validación:** el QR solo se muestra cuando el código de equipo tiene 3 caracteres y todas las zonas tienen dorsal, sin repetidos. Si falta algo, la app indica qué.
+- RF-05. **QR:** el botón **Mostrar QR** abre una vista aparte, a pantalla completa y sobre fondo blanco, con el QR (formato en la sección 6) y el código de equipo y el set.
+- RF-06. **Validación:** el botón Mostrar QR solo se activa cuando el código de equipo tiene 3 caracteres y todas las zonas tienen dorsal, sin repetidos. Los dorsales repetidos se marcan en la pista.
 - RF-06b. Mientras se muestra la vista del entrenador, la pantalla no se apaga.
+- RF-06c. **Sin scroll:** toda la vista del entrenador (código, sets, pista, rotar y Mostrar QR) cabe en una pantalla, en vertical y en horizontal. La pista ocupa el espacio que queda libre.
 
 ## 5. Vista del árbitro
 
@@ -100,7 +99,7 @@ Referencia: el código de la app iOS de Clipeo (`VoleyStats/voleyStatsApp`). Los
 
 - RV-01. **Colores:** fondo #070A12 (con #0F1524 y #24304F); volt #CBFB45 como acento principal (con #B6EE1F y #E4FF87); azul #3D6BFF como segundo color (con #6E93FF y #9CB8FF); textos en #FFFFFF / #E2E8F0 y secundarios en #94A3B8 / #64748B. En el logo y el icono se mantienen el fondo #0F1919, el azul #4A9FEE y el gris #E1E1E1.
 - RV-02. **Tipografía:** como Clipeo, Space Grotesk (Medium) para títulos y la fuente del sistema para el texto.
-- RV-03. **Componentes y estilo:** como Clipeo. Tarjetas en blanco al 10 % con radio 15; campos y botones con radio 8; chips en cápsula; acción principal en volt con texto oscuro; elementos seleccionados en volt; al pulsar, escala 0,97. La pista se dibuja como el tablero de rotación de Clipeo: celdas en blanco al 12 %, separación de 2 pt, esquinas de 4 pt y la fila de delante más baja.
+- RV-03. **Componentes y estilo:** como Clipeo. Tarjetas en blanco al 10 % con radio 15; campos y botones con radio 8; chips en cápsula; acción principal en volt con texto oscuro; elementos seleccionados en volt; al pulsar, escala 0,97. La pista se dibuja con la geometría del tablero de rotación de Clipeo (separación de 2 pt, esquinas de 4 pt y la fila de delante más baja), con las zonas en azul #3D6BFF para que se distinga bien del fondo. Un dorsal repetido pinta su zona en rojo.
 - RV-04. **Icono:** misma familia que el de Clipeo (fondo, trazo azul de contorno y relleno gris), con símbolo propio: una flecha de rotación en sentido horario alrededor de un balón. Se genera con `scripts/render-icons.mjs`.
 
 ## 9. Fuera de alcance

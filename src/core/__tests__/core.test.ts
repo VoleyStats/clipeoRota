@@ -7,7 +7,7 @@ import {
   validateLineup,
 } from '../lineup';
 import { decodeLineup, encodeLineup } from '../qr';
-import { canAdvance, copyableSets, parseCoachState } from '../sets';
+import { copyableSets, parseCoachState, setAction } from '../sets';
 
 describe('formats', () => {
   it.each(MODES)('%s layout contains each zone exactly once', (mode) => {
@@ -109,12 +109,16 @@ describe('QR', () => {
 });
 
 describe('sets', () => {
-  it('lists complete earlier sets as copyable and only advances when complete', () => {
+  it('set buttons: copy complete earlier sets, advance only when the current one is complete', () => {
     const state = { team: 'ABC', active: 3, sets: { 1: ['1', '2', '3'], 2: ['1', '', '3'] } };
     expect(copyableSets(state)).toEqual([1]);
-    expect(canAdvance(state, '3x3')).toBe(false);
-    expect(canAdvance({ ...state, sets: { ...state.sets, 3: ['4', '5', '6'] } }, '3x3')).toBe(true);
-    expect(canAdvance({ ...state, active: 5, sets: { 5: ['4', '5', '6'] } }, '3x3')).toBe(false);
+    expect([1, 2, 3, 4, 5].map((n) => setAction(state, '3x3', n))).toEqual(['copy', null, 'current', null, null]);
+
+    const complete = { ...state, sets: { ...state.sets, 3: ['4', '5', '6'] } };
+    expect(setAction(complete, '3x3', 4)).toBe('advance');
+    expect(setAction({ ...complete, team: 'AB' }, '3x3', 4)).toBeNull(); // no QR without team code
+    expect(setAction(complete, '3x3', 5)).toBeNull();
+    expect(setAction({ ...complete, active: 5, sets: { 5: ['4', '5', '6'] } }, '3x3', 6)).toBeNull();
   });
 
   it('drops stored sets that do not fit the modality', () => {

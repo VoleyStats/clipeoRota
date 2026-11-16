@@ -2,35 +2,42 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Dropdown } from '../components/Dropdown';
 import { Screen } from '../components/Screen';
-import { loadPrefs, type Profile } from '../storage';
+import { FORMATS, MODES, type Mode } from '../core/formats';
+import { loadPrefs, savePrefs, type Profile } from '../storage';
 import { t } from '../strings';
 import { color, font, pressScale, radius, space } from '../ui/theme';
 
+const DEFAULT_MODE: Mode = '6x6';
+const MODE_OPTIONS = MODES.map((m) => ({ value: m, label: m, detail: t.zones(FORMATS[m].zones) }));
+
 // Only jump to the remembered view on a cold start, not when the user comes
-// back here on purpose to change profile.
+// back here on purpose to change role or modality.
 let resumed = false;
 
-export default function ProfileScreen() {
-  const [ready, setReady] = useState(resumed);
+/** Home: global modality (dropdown) + role, on one screen. */
+export default function HomeScreen() {
+  const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState<Mode>(DEFAULT_MODE);
 
   useEffect(() => {
-    if (resumed) return;
-    resumed = true;
     loadPrefs().then((prefs) => {
-      if (prefs) {
-        // Build the stack (perfil → modalidad → vista) so "Cambiar" goes back one step.
-        router.push({ pathname: '/modalidad', params: { perfil: prefs.profile } });
-        router.push(`/${prefs.profile}/${prefs.mode}`);
-      }
+      const savedMode = prefs.mode ?? DEFAULT_MODE;
+      setMode(savedMode);
+      if (!resumed && prefs.profile) router.push(`/${prefs.profile}/${savedMode}`);
+      resumed = true;
       setReady(true);
     });
   }, []);
 
   if (!ready) return <View style={styles.blank} />;
 
-  const choose = (profile: Profile) =>
-    router.push({ pathname: '/modalidad', params: { perfil: profile } });
+  const changeMode = (m: Mode) => {
+    setMode(m);
+    savePrefs({ mode: m });
+  };
+  const open = (profile: Profile) => router.push(`/${profile}/${mode}`);
 
   return (
     <Screen>
@@ -42,15 +49,19 @@ export default function ProfileScreen() {
           <Text style={styles.tagline}>{t.tagline}</Text>
         </View>
 
-        <Text style={styles.heading}>{t.chooseProfile}</Text>
-        <ProfileCard title={t.coach} hint={t.coachHint} onPress={() => choose('entrenador')} />
-        <ProfileCard title={t.referee} hint={t.refereeHint} onPress={() => choose('arbitro')} />
+        <Dropdown label={t.mode} value={mode} options={MODE_OPTIONS} onChange={changeMode} />
+
+        <View style={styles.roles}>
+          <Text style={styles.label}>{t.chooseProfile}</Text>
+          <RoleCard title={t.coach} hint={t.coachHint} onPress={() => open('entrenador')} />
+          <RoleCard title={t.referee} hint={t.refereeHint} onPress={() => open('arbitro')} />
+        </View>
       </ScrollView>
     </Screen>
   );
 }
 
-function ProfileCard({ title, hint, onPress }: { title: string; hint: string; onPress: () => void }) {
+function RoleCard({ title, hint, onPress }: { title: string; hint: string; onPress: () => void }) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -69,16 +80,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: space.xl,
-    gap: space.lg,
+    gap: space.xl,
     width: '100%',
     maxWidth: 560,
     alignSelf: 'center',
   },
-  brand: { alignItems: 'center', marginBottom: space.xl },
+  brand: { alignItems: 'center', marginBottom: space.lg },
   appName: { fontFamily: font.headingBold, fontSize: 40, color: color.textPrimary },
   appNameAccent: { color: color.volt },
   tagline: { fontSize: 16, color: color.textSecondary, marginTop: space.sm },
-  heading: { fontFamily: font.heading, fontSize: 20, color: color.textPrimary },
+  roles: { gap: space.md },
+  label: { fontSize: 14, fontWeight: '600', color: color.textSecondary },
   card: { padding: space.xl, borderRadius: radius.card, backgroundColor: color.card, gap: space.xs },
   cardPressed: { transform: [{ scale: pressScale }] },
   cardTitle: { fontFamily: font.heading, fontSize: 26, color: color.textPrimary },

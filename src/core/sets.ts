@@ -1,5 +1,5 @@
 import { emptyLineup, FORMATS, type Mode } from './formats';
-import { isLineupComplete, normalizeDorsal, normalizeTeamCode } from './lineup';
+import { isLineupComplete, normalizeDorsal, normalizeTeamCode, validateLineup } from './lineup';
 
 export const MAX_SETS = 5;
 
@@ -34,8 +34,21 @@ export function copyableSets(state: CoachState): number[] {
   return result;
 }
 
-export function canAdvance(state: CoachState, mode: Mode): boolean {
-  return state.active < MAX_SETS && isLineupComplete(currentLineup(state, mode));
+/**
+ * What tapping a set button does:
+ * - 'advance': the next set, enabled once the current one is complete (its QR exists).
+ * - 'copy': an earlier set with a complete rotation, copied into the current one.
+ * - 'current': the set being prepared (no-op).
+ * - null: disabled.
+ */
+export type SetAction = 'advance' | 'copy' | 'current' | null;
+
+export function setAction(state: CoachState, mode: Mode, set: number): SetAction {
+  if (set === state.active) return 'current';
+  if (set === state.active + 1 && set <= MAX_SETS) {
+    return validateLineup(state.team, currentLineup(state, mode)).length === 0 ? 'advance' : null;
+  }
+  return copyableSets(state).includes(set) ? 'copy' : null;
 }
 
 /** Validates data read from storage; returns null if it doesn't fit the modality. */

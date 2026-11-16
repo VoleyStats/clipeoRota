@@ -33,8 +33,7 @@ Las compilaciones para las tiendas se hacen en la nube con EAS (`npx eas-cli@lat
 ```
 src/
   app/                 Pantallas (Expo Router)
-    index.tsx            Elegir perfil (y reabrir la última vista)
-    modalidad.tsx        Elegir 3x3 / 4x4 / 6x6
+    index.tsx            Inicio: modalidad (desplegable) + rol; reabre la última vista
     entrenador/[mod].tsx Vista del entrenador: pista, sets, rotar, QR
     arbitro/[mod].tsx    Vista del árbitro: equipos A y B, escáner
   core/                Lógica pura y probada: formatos, dorsales, rotación, validación, QR, sets

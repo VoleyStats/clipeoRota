@@ -1,30 +1,28 @@
 import type { DecodeError } from './core/qr';
-import type { Issue } from './core/lineup';
 
 /** All user-facing text. Spanish only for now (RNF-04); kept in one place to translate later. */
 export const t = {
   appName: 'Clipeo Rota',
   tagline: 'La hoja de rotación, en un QR.',
-  chooseProfile: 'Elige tu perfil',
+  mode: 'Modalidad',
+  chooseProfile: 'Elige tu rol',
   coach: 'Entrenador',
   coachHint: 'Escribe tu rotación y enséñala en un QR.',
   referee: 'Árbitro',
   refereeHint: 'Escanea el QR de cada equipo.',
-  chooseMode: 'Elige la modalidad',
   zones: (n: number) => `${n} zonas`,
-  back: 'Cambiar',
+  back: 'Volver',
 
   teamCode: 'Código de equipo',
+  teamCodeShort: 'Código',
   teamCodePlaceholder: 'ABC',
   set: 'Set',
   setInProgress: (n: number) => `Preparando el set ${n}`,
-  copyHint: 'Toca un set anterior para copiar su rotación.',
   rotateCw: 'Rotar ↻',
   rotateCcw: '↺ Rotar',
   net: 'RED',
   zone: (n: number) => `Zona ${n}`,
   setLabel: (n: number) => `Set ${n}`,
-  nextSet: (n: number) => `Pasar al set ${n} →`,
   newMatch: 'Nuevo partido',
   newMatchConfirm: '¿Borrar las rotaciones de todos los sets? El código de equipo se mantiene.',
   copyConfirm: (from: number, to: number) =>
@@ -32,20 +30,9 @@ export const t = {
   replace: 'Sustituir',
   delete: 'Borrar',
   cancel: 'Cancelar',
-  missing: 'Para mostrar el QR falta:',
+  showQr: 'Mostrar QR',
   qrCaption: (team: string, set: number) => `${team} · Set ${set}`,
-  issue(issue: Issue): string {
-    switch (issue.kind) {
-      case 'team':
-        return 'Código de equipo de 3 caracteres.';
-      case 'empty':
-        return issue.zones.length === 1
-          ? `Dorsal en la zona ${issue.zones[0]}.`
-          : `Dorsal en las zonas ${issue.zones.join(', ')}.`;
-      case 'duplicate':
-        return `El dorsal ${issue.dorsal} está repetido (zonas ${issue.zones.join(' y ')}).`;
-    }
-  },
+  qrCloseHint: 'Toca para cerrar',
 
   setMismatch: (a: number, b: number) =>
     `Los equipos han entregado sets distintos (A: set ${a}, B: set ${b}).`,
