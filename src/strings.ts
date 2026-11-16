@@ -10,7 +10,7 @@ export const t = {
   coachHint: 'Escribe tu rotación y enséñala en un QR.',
   referee: 'Árbitro',
   refereeHint: 'Escanea el QR de cada equipo.',
-  zones: (n: number) => `${n} zonas`,
+  modeName: (mode: string) => (mode === '6x6' ? 'Voleibol' : 'Minivoley'),
   back: 'Volver',
 
   teamCode: 'Código de equipo',

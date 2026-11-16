@@ -4,13 +4,13 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 
 import { Dropdown } from '../components/Dropdown';
 import { Screen } from '../components/Screen';
-import { FORMATS, MODES, type Mode } from '../core/formats';
+import { MODES, type Mode } from '../core/formats';
 import { loadPrefs, savePrefs, type Profile } from '../storage';
 import { t } from '../strings';
 import { color, font, pressScale, radius, space } from '../ui/theme';
 
 const DEFAULT_MODE: Mode = '6x6';
-const MODE_OPTIONS = MODES.map((m) => ({ value: m, label: m, detail: t.zones(FORMATS[m].zones) }));
+const MODE_OPTIONS = MODES.map((m) => ({ value: m, label: t.modeName(m), detail: m }));
 
 // Only jump to the remembered view on a cold start, not when the user comes
 // back here on purpose to change role or modality.
