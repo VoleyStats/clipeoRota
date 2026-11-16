@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Dropdown } from '../components/Dropdown';
 import { Screen } from '../components/Screen';
@@ -43,6 +43,12 @@ export default function HomeScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.brand}>
+          <Image
+            source={require('../../assets/splash-icon.png')}
+            style={styles.logo}
+            accessibilityIgnoresInvertColors
+            accessible={false}
+          />
           <Text style={styles.appName}>
             Clipeo <Text style={styles.appNameAccent}>Rota</Text>
           </Text>
@@ -86,8 +92,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   brand: { alignItems: 'center', marginBottom: space.lg },
+  // splash-icon.png is the app symbol on a transparent background (scripts/render-icons.mjs).
+  logo: { width: 112, height: 112, marginBottom: space.md },
   appName: { fontFamily: font.headingBold, fontSize: 40, color: color.textPrimary },
-  appNameAccent: { color: color.volt },
+  appNameAccent: { color: color.brandBlue },
   tagline: { fontSize: 16, color: color.textSecondary, marginTop: space.sm },
   roles: { gap: space.md },
   label: { fontSize: 14, fontWeight: '600', color: color.textSecondary },

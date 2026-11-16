@@ -7,7 +7,7 @@ import {
   validateLineup,
 } from '../lineup';
 import { decodeLineup, encodeLineup } from '../qr';
-import { copyableSets, parseCoachState, setAction } from '../sets';
+import { adoptViewedLineup, canOpenSet, editLineup, openSet, parseCoachState, wouldReplaceCurrent } from '../sets';
 
 describe('formats', () => {
   it.each(MODES)('%s layout contains each zone exactly once', (mode) => {
@@ -109,21 +109,52 @@ describe('QR', () => {
 });
 
 describe('sets', () => {
-  it('set buttons: copy complete earlier sets, advance only when the current one is complete', () => {
-    const state = { team: 'ABC', active: 3, sets: { 1: ['1', '2', '3'], 2: ['1', '', '3'] } };
-    expect(copyableSets(state)).toEqual([1]);
-    expect([1, 2, 3, 4, 5].map((n) => setAction(state, '3x3', n))).toEqual(['copy', null, 'current', null, null]);
+  const S = (o: object) => ({ team: 'ABC', current: 1, viewing: 1, sets: {}, ...o });
 
-    const complete = { ...state, sets: { ...state.sets, 3: ['4', '5', '6'] } };
-    expect(setAction(complete, '3x3', 4)).toBe('advance');
-    expect(setAction({ ...complete, team: 'AB' }, '3x3', 4)).toBeNull(); // no QR without team code
-    expect(setAction(complete, '3x3', 5)).toBeNull();
-    expect(setAction({ ...complete, active: 5, sets: { 5: ['4', '5', '6'] } }, '3x3', 6)).toBeNull();
+  it('set buttons open earlier sets and the next one once the current has a QR', () => {
+    const state = S({ current: 2, viewing: 2, sets: { 1: ['1', '2', '3'], 2: ['1', '', '3'] } });
+    expect([0, 1, 2, 3, 4, 5, 6].map((n) => canOpenSet(state, '3x3', n))).toEqual([
+      false, true, true, false, false, false, false,
+    ]);
+    const complete = { ...state, sets: { ...state.sets, 2: ['4', '5', '6'] } };
+    expect(canOpenSet(complete, '3x3', 3)).toBe(true);
+    expect(canOpenSet({ ...complete, team: 'AB' }, '3x3', 3)).toBe(false);
+  });
+
+  it('the next set starts blank and becomes the current one', () => {
+    const state = S({ sets: { 1: ['1', '2', '3'] } });
+    expect(openSet(state, '3x3', 2)).toEqual(S({ current: 2, viewing: 2, sets: { 1: ['1', '2', '3'] } }));
+    expect(openSet(state, '3x3', 3)).toBe(state); // not reachable
+  });
+
+  it('using an earlier set moves its rotation into the current one', () => {
+    const state = S({ current: 3, viewing: 1, sets: { 1: ['1', '2', '3'], 2: ['4', '5', '6'] } });
+
+    // Editing set 1 while viewing it: set 1 stays, set 3 gets the edited rotation.
+    const edited = editLineup(state, ['3', '1', '2']);
+    expect(edited.viewing).toBe(3);
+    expect(edited.sets).toEqual({ 1: ['1', '2', '3'], 2: ['4', '5', '6'], 3: ['3', '1', '2'] });
+
+    // Showing the QR of set 1: copied into set 3 as is.
+    const adopted = adoptViewedLineup(state, '3x3');
+    expect(adopted.viewing).toBe(3);
+    expect(adopted.sets[3]).toEqual(['1', '2', '3']);
+    expect(adopted.sets[3]).not.toBe(adopted.sets[1]);
+    expect(adoptViewedLineup(adopted, '3x3')).toBe(adopted); // already on the current set
+  });
+
+  it('asks before replacing a different rotation in the current set', () => {
+    const base = S({ current: 3, viewing: 1, sets: { 1: ['1', '2', '3'] } });
+    expect(wouldReplaceCurrent(base, '3x3')).toBe(false); // current set blank
+    expect(wouldReplaceCurrent({ ...base, sets: { ...base.sets, 3: ['', '', ''] } }, '3x3')).toBe(false);
+    expect(wouldReplaceCurrent({ ...base, sets: { ...base.sets, 3: ['1', '2', '3'] } }, '3x3')).toBe(false); // same
+    expect(wouldReplaceCurrent({ ...base, sets: { ...base.sets, 3: ['7', '', ''] } }, '3x3')).toBe(true);
+    expect(wouldReplaceCurrent({ ...base, viewing: 3, sets: { ...base.sets, 3: ['7', '', ''] } }, '3x3')).toBe(false);
   });
 
   it('drops stored sets that do not fit the modality', () => {
-    const raw = { team: 'abc', active: 2, sets: { 1: ['1', '2', '3'], 2: ['1', '2'], 9: ['1', '2', '3'] } };
-    expect(parseCoachState(raw, '3x3')).toEqual({ team: 'ABC', active: 2, sets: { 1: ['1', '2', '3'] } });
-    expect(parseCoachState({ team: 'A', active: 0, sets: {} }, '3x3')).toBeNull();
+    const raw = { team: 'abc', current: 2, viewing: 4, sets: { 1: ['1', '2', '3'], 2: ['1', '2'], 9: ['1', '2', '3'] } };
+    expect(parseCoachState(raw, '3x3')).toEqual({ team: 'ABC', current: 2, viewing: 2, sets: { 1: ['1', '2', '3'] } });
+    expect(parseCoachState({ team: 'A', current: 0, sets: {} }, '3x3')).toBeNull();
   });
 });

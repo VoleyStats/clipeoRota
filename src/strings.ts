@@ -24,10 +24,11 @@ export const t = {
   zone: (n: number) => `Zona ${n}`,
   setLabel: (n: number) => `Set ${n}`,
   newMatch: 'Nuevo partido',
-  newMatchConfirm: '¿Borrar las rotaciones de todos los sets? El código de equipo se mantiene.',
-  copyConfirm: (from: number, to: number) =>
-    `El set ${to} ya tiene dorsales. ¿Sustituirlos por la rotación del set ${from}?`,
+  replaceTitle: 'Sustituir rotación',
+  replaceConfirm: (from: number, to: number) =>
+    `El set ${to} ya tiene otra rotación. ¿Sustituirla por la del set ${from}?`,
   replace: 'Sustituir',
+  newMatchConfirm: '¿Borrar las rotaciones de todos los sets? El código de equipo se mantiene.',
   delete: 'Borrar',
   cancel: 'Cancelar',
   showQr: 'Mostrar QR',

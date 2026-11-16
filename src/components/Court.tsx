@@ -12,6 +12,8 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   /** Fill the parent's free space (flex: 1) instead of using the width + aspect ratio. */
   fit?: boolean;
+  /** Zone being edited, outlined in volt. */
+  activeZone?: number | null;
 }
 
 /** Clipeo's rotation board is 300x350; a little flatter leaves room for the controls. */
@@ -22,10 +24,10 @@ const FIT_SCALE = 0.9; // leave some air around the court when it fills the free
 /**
  * Half court seen from the team's own side, net on top. Same geometry as
  * Clipeo's rotation board (Court.swift / OpponentCourt.swift): 2 pt gap,
- * 4 pt corners, smaller front row, zone 1 at the back right. Cells are filled
- * with Clipeo's accent blue so the court stands out from the dark background.
+ * 4 pt corners, smaller front row, zone 1 at the back right. Cells use the
+ * family blue of the logo (#4A9FEE) with dark text, so the court stands out.
  */
-export function Court({ mode, renderZone, style, fit }: Props) {
+export function Court({ mode, renderZone, style, fit, activeZone }: Props) {
   const [box, setBox] = useState<{ width: number; height: number } | null>(null);
 
   if (fit) {
@@ -35,6 +37,7 @@ export function Court({ mode, renderZone, style, fit }: Props) {
           <CourtBody
             mode={mode}
             renderZone={renderZone}
+            activeZone={activeZone}
             style={[
               {
                 width: Math.min(box.width, box.height * ASPECT * MAX_STRETCH) * FIT_SCALE,
@@ -47,10 +50,17 @@ export function Court({ mode, renderZone, style, fit }: Props) {
       </View>
     );
   }
-  return <CourtBody mode={mode} renderZone={renderZone} style={[{ width: '100%', aspectRatio: ASPECT }, style]} />;
+  return (
+    <CourtBody
+      mode={mode}
+      renderZone={renderZone}
+      activeZone={activeZone}
+      style={[{ width: '100%', aspectRatio: ASPECT }, style]}
+    />
+  );
 }
 
-function CourtBody({ mode, renderZone, style }: Omit<Props, 'fit'>) {
+function CourtBody({ mode, renderZone, style, activeZone }: Omit<Props, 'fit'>) {
   const { layout, rowWeights } = FORMATS[mode];
   return (
     <View style={[styles.court, style]}>
@@ -63,7 +73,7 @@ function CourtBody({ mode, renderZone, style }: Omit<Props, 'fit'>) {
         {layout.map((row, r) => (
           <View key={r} style={[styles.row, { flex: rowWeights[r] }]}>
             {row.map((zone) => (
-              <View key={zone} style={styles.cell}>
+              <View key={zone} style={[styles.cell, zone === activeZone && styles.cellActive]}>
                 <Text style={styles.zoneLabel}>{t.zone(zone)}</Text>
                 <View style={styles.content}>{renderZone(zone)}</View>
               </View>
@@ -89,7 +99,11 @@ const styles = StyleSheet.create({
     paddingTop: space.xs,
     borderRadius: radius.court,
     backgroundColor: color.courtCell,
+    // Always 3 pt wide so outlining the active zone doesn't shift its content.
+    borderWidth: 3,
+    borderColor: 'transparent',
   },
+  cellActive: { borderColor: color.textPrimary },
   zoneLabel: { fontSize: 11, fontWeight: '600', color: color.courtLabel },
   content: { flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' },
 });

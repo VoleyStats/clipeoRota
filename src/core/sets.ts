@@ -1,71 +1,99 @@
 import { emptyLineup, FORMATS, type Mode } from './formats';
-import { isLineupComplete, normalizeDorsal, normalizeTeamCode, validateLineup } from './lineup';
+import { normalizeDorsal, normalizeTeamCode, validateLineup } from './lineup';
 
 export const MAX_SETS = 5;
 
-/** Coach state for one modality, persisted on the device. */
+/**
+ * Coach state for one modality, persisted on the device.
+ *
+ * `current` is the set being prepared (the last one opened) and the only one
+ * that changes. Earlier sets are history: they can be viewed, and using one
+ * (editing it or showing its QR) moves its rotation into the current set.
+ */
 export interface CoachState {
   team: string;
   /** Set being prepared (1..MAX_SETS). */
-  active: number;
-  /** Rotation per set number. Missing set = not started. */
+  current: number;
+  /** Set on screen: the current one or an earlier one being looked at. */
+  viewing: number;
+  /** Rotation per set number. Missing set = blank. */
   sets: Record<number, string[]>;
 }
 
 export function initialCoachState(team = ''): CoachState {
-  return { team, active: 1, sets: {} };
+  return { team, current: 1, viewing: 1, sets: {} };
 }
 
-export function currentLineup(state: CoachState, mode: Mode): string[] {
-  return state.sets[state.active] ?? emptyLineup(mode);
+export function viewedLineup(state: CoachState, mode: Mode): string[] {
+  return state.sets[state.viewing] ?? emptyLineup(mode);
 }
 
-export function isEmptyLineup(dorsales: readonly string[]): boolean {
-  return dorsales.every((d) => d === '');
+/** The set has a QR: team code and a complete rotation without repeats. */
+export function hasQr(state: CoachState, mode: Mode, set: number): boolean {
+  return validateLineup(state.team, state.sets[set] ?? emptyLineup(mode)).length === 0;
 }
 
-/** Sets before the active one that have a complete rotation (can be copied). */
-export function copyableSets(state: CoachState): number[] {
-  const result: number[] = [];
-  for (let s = 1; s < state.active; s++) {
-    const lineup = state.sets[s];
-    if (lineup && isLineupComplete(lineup)) result.push(s);
-  }
-  return result;
+/** Earlier sets and the current one can be opened; the next one once the current has a QR. */
+export function canOpenSet(state: CoachState, mode: Mode, set: number): boolean {
+  if (!Number.isInteger(set) || set < 1 || set > MAX_SETS) return false;
+  if (set <= state.current) return true;
+  return set === state.current + 1 && hasQr(state, mode, state.current);
+}
+
+/** Opening the next set makes it the current one, blank. Other sets are just viewed. */
+export function openSet(state: CoachState, mode: Mode, set: number): CoachState {
+  if (!canOpenSet(state, mode, set)) return state;
+  if (set === state.current + 1) return { ...state, current: set, viewing: set };
+  return { ...state, viewing: set };
 }
 
 /**
- * What tapping a set button does:
- * - 'advance': the next set, enabled once the current one is complete (its QR exists).
- * - 'copy': an earlier set with a complete rotation, copied into the current one.
- * - 'current': the set being prepared (no-op).
- * - null: disabled.
+ * Applies an edit to the set on screen. Editing an earlier set writes the
+ * result into the current set (the earlier one stays as it was) and goes back
+ * to the current set.
  */
-export type SetAction = 'advance' | 'copy' | 'current' | null;
+export function editLineup(state: CoachState, next: string[]): CoachState {
+  return { ...state, viewing: state.current, sets: { ...state.sets, [state.current]: next } };
+}
 
-export function setAction(state: CoachState, mode: Mode, set: number): SetAction {
-  if (set === state.active) return 'current';
-  if (set === state.active + 1 && set <= MAX_SETS) {
-    return validateLineup(state.team, currentLineup(state, mode)).length === 0 ? 'advance' : null;
-  }
-  return copyableSets(state).includes(set) ? 'copy' : null;
+/**
+ * Using the earlier set on screen would replace a different rotation already
+ * written in the current set (worth a confirmation).
+ */
+export function wouldReplaceCurrent(state: CoachState, mode: Mode): boolean {
+  if (state.viewing === state.current) return false;
+  const current = state.sets[state.current];
+  if (!current || current.every((d) => d === '')) return false;
+  const viewed = viewedLineup(state, mode);
+  return current.some((d, i) => d !== viewed[i]);
+}
+
+/** Moves the rotation on screen into the current set (used before showing the QR). */
+export function adoptViewedLineup(state: CoachState, mode: Mode): CoachState {
+  if (state.viewing === state.current) return state;
+  return editLineup(state, [...viewedLineup(state, mode)]);
 }
 
 /** Validates data read from storage; returns null if it doesn't fit the modality. */
 export function parseCoachState(raw: unknown, mode: Mode): CoachState | null {
   if (typeof raw !== 'object' || raw === null) return null;
-  const { team, active, sets } = raw as Record<string, unknown>;
-  if (typeof team !== 'string' || typeof active !== 'number') return null;
-  if (!Number.isInteger(active) || active < 1 || active > MAX_SETS) return null;
+  const { team, current, viewing, sets } = raw as Record<string, unknown>;
+  const isSet = (n: unknown): n is number =>
+    typeof n === 'number' && Number.isInteger(n) && n >= 1 && n <= MAX_SETS;
+  if (typeof team !== 'string' || !isSet(current)) return null;
   if (typeof sets !== 'object' || sets === null) return null;
 
   const zones = FORMATS[mode].zones;
   const parsed: Record<number, string[]> = {};
   for (const [key, value] of Object.entries(sets)) {
     const n = Number(key);
-    if (!Number.isInteger(n) || n < 1 || n > MAX_SETS) continue;
-    if (!Array.isArray(value) || value.length !== zones) continue;
+    if (!isSet(n) || !Array.isArray(value) || value.length !== zones) continue;
     parsed[n] = value.map((d) => (typeof d === 'string' ? normalizeDorsal(d) : ''));
   }
-  return { team: normalizeTeamCode(team), active, sets: parsed };
+  return {
+    team: normalizeTeamCode(team),
+    current,
+    viewing: isSet(viewing) && viewing <= current ? viewing : current,
+    sets: parsed,
+  };
 }

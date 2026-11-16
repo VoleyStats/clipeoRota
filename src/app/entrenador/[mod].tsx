@@ -16,6 +16,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '../../components/Button';
+import { CodeInput } from '../../components/CodeInput';
 import { Court } from '../../components/Court';
 import { Screen } from '../../components/Screen';
 import { isMode, type Mode } from '../../core/formats';
@@ -24,17 +25,21 @@ import {
   normalizeDorsal,
   normalizeTeamCode,
   rotate,
+  TEAM_CODE_LENGTH,
   validateLineup,
   type Direction,
 } from '../../core/lineup';
 import { encodeLineup } from '../../core/qr';
 import {
-  currentLineup,
+  adoptViewedLineup,
+  canOpenSet,
+  wouldReplaceCurrent,
+  editLineup,
   initialCoachState,
-  isEmptyLineup,
   MAX_SETS,
+  openSet,
   parseCoachState,
-  setAction,
+  viewedLineup,
   type CoachState,
 } from '../../core/sets';
 import { savePrefs, usePersistentState } from '../../storage';
@@ -65,14 +70,25 @@ function CoachScreen({ mode }: { mode: Mode }) {
     (raw) => parseCoachState(raw, mode),
   );
   const [showQr, setShowQr] = useState(false);
+  const [activeZone, setActiveZone] = useState<number | null>(null);
 
-  const dorsales = currentLineup(state, mode);
+  // The set on screen may be an earlier one; any edit, and the QR, go to the current set.
+  const dorsales = viewedLineup(state, mode);
   const duplicates = duplicateZones(dorsales);
   const valid = validateLineup(state.team, dorsales).length === 0;
-  const payload = valid ? encodeLineup({ mode, team: state.team, set: state.active, dorsales }) : null;
+  const payload = valid ? encodeLineup({ mode, team: state.team, set: state.current, dorsales }) : null;
 
-  const setLineup = (next: string[]) =>
-    setState((s) => ({ ...s, sets: { ...s.sets, [s.active]: next } }));
+  /** Runs `apply` right away, or after confirming when it would replace the current set's rotation. */
+  const confirmReplace = (apply: () => void) => {
+    if (!wouldReplaceCurrent(state, mode)) return apply();
+    Keyboard.dismiss();
+    Alert.alert(t.replaceTitle, t.replaceConfirm(state.viewing, state.current), [
+      { text: t.cancel, style: 'cancel' },
+      { text: t.replace, style: 'destructive', onPress: apply },
+    ]);
+  };
+
+  const setLineup = (next: string[]) => confirmReplace(() => setState((s) => editLineup(s, next)));
 
   const setDorsal = (zone: number, value: string) => {
     const next = [...dorsales];
@@ -83,21 +99,8 @@ function CoachScreen({ mode }: { mode: Mode }) {
   const onRotate = (direction: Direction) => setLineup(rotate(dorsales, direction));
 
   const onSetPress = (set: number) => {
-    switch (setAction(state, mode, set)) {
-      case 'advance':
-        Keyboard.dismiss();
-        setState((s) => ({ ...s, active: set }));
-        return;
-      case 'copy': {
-        const source = state.sets[set];
-        if (isEmptyLineup(dorsales)) return setLineup([...source]);
-        Alert.alert(t.setInProgress(state.active), t.copyConfirm(set, state.active), [
-          { text: t.cancel, style: 'cancel' },
-          { text: t.replace, style: 'destructive', onPress: () => setLineup([...source]) },
-        ]);
-        return;
-      }
-    }
+    Keyboard.dismiss();
+    setState((s) => openSet(s, mode, set));
   };
 
   const onNewMatch = () =>
@@ -108,7 +111,10 @@ function CoachScreen({ mode }: { mode: Mode }) {
 
   const openQr = () => {
     Keyboard.dismiss();
-    setShowQr(true);
+    confirmReplace(() => {
+      setState((s) => adoptViewedLineup(s, mode));
+      setShowQr(true);
+    });
   };
 
   const { width, height } = useWindowDimensions();
@@ -118,37 +124,30 @@ function CoachScreen({ mode }: { mode: Mode }) {
     <View style={styles.controls}>
       <View style={styles.line}>
         <Text style={styles.label}>{t.teamCodeShort}</Text>
-        <TextInput
+        <CodeInput
           value={state.team}
-          onChangeText={(v) => setState((s) => ({ ...s, team: normalizeTeamCode(v) }))}
-          placeholder={t.teamCodePlaceholder}
-          placeholderTextColor={color.textMuted}
-          autoCapitalize="characters"
-          autoCorrect={false}
-          maxLength={3}
-          style={styles.teamInput}
+          onChange={(team) => setState((s) => ({ ...s, team }))}
+          length={TEAM_CODE_LENGTH}
+          normalize={normalizeTeamCode}
           accessibilityLabel={t.teamCode}
         />
       </View>
       <View style={styles.line}>
         <Text style={styles.label}>{t.set}</Text>
         <View style={styles.setRow}>
-          {SETS.map((set) => {
-            const action = setAction(state, mode, set);
-            return (
-              <Button
-                key={set}
-                label={String(set)}
-                variant="secondary"
-                pill
-                selected={action === 'current'}
-                disabled={action === null}
-                onPress={() => onSetPress(set)}
-                style={styles.setButton}
-                accessibilityLabel={`${t.set} ${set}`}
-              />
-            );
-          })}
+          {SETS.map((set) => (
+            <Button
+              key={set}
+              label={String(set)}
+              variant="secondary"
+              pill
+              selected={set === state.viewing}
+              disabled={!canOpenSet(state, mode, set)}
+              onPress={() => onSetPress(set)}
+              style={[styles.setButton, set === state.current && set !== state.viewing && styles.setCurrent]}
+              accessibilityLabel={`${t.set} ${set}`}
+            />
+          ))}
         </View>
       </View>
     </View>
@@ -158,10 +157,13 @@ function CoachScreen({ mode }: { mode: Mode }) {
     <Court
       mode={mode}
       fit
+      activeZone={activeZone}
       renderZone={(zone) => (
         <TextInput
           value={dorsales[zone - 1] ?? ''}
           onChangeText={(v) => setDorsal(zone, v)}
+          onFocus={() => setActiveZone(zone)}
+          onBlur={() => setActiveZone((z) => (z === zone ? null : z))}
           keyboardType="number-pad"
           maxLength={2}
           selectTextOnFocus
@@ -222,7 +224,7 @@ function CoachScreen({ mode }: { mode: Mode }) {
       >
         <SafeAreaView style={styles.qrView}>
           <View style={styles.qrContent}>
-            <Text style={styles.qrCaption}>{t.qrCaption(state.team, state.active)}</Text>
+            <Text style={styles.qrCaption}>{t.qrCaption(state.team, state.current)}</Text>
             {payload && (
               <QRCode
                 value={payload}
@@ -262,20 +264,10 @@ const styles = StyleSheet.create({
   controls: { gap: space.sm },
   // One control per line: label on the left, control on the right.
   line: { flexDirection: 'row', alignItems: 'center', gap: space.md },
-  teamInput: {
-    width: 96,
-    height: 44,
-    fontFamily: font.headingBold,
-    fontSize: 24,
-    letterSpacing: 4,
-    textAlign: 'center',
-    color: color.textPrimary,
-    backgroundColor: color.field,
-    borderRadius: radius.control,
-    padding: 0,
-  },
   setRow: { flex: 1, flexDirection: 'row', gap: space.xs },
   setButton: { flex: 1, paddingHorizontal: 0 },
+  // Marks the set being prepared while an earlier one is on screen.
+  setCurrent: { borderWidth: 2, borderColor: color.volt },
 
   // Fills the whole cell so tapping anywhere in the zone edits it.
   dorsalInput: {
@@ -284,7 +276,7 @@ const styles = StyleSheet.create({
     fontFamily: font.headingBold,
     fontSize: 40,
     textAlign: 'center',
-    color: color.textPrimary,
+    color: color.courtInk,
     padding: 0,
   },
   // Red text is unreadable on the blue court: paint the whole zone red instead.

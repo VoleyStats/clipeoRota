@@ -38,10 +38,12 @@ El líbero no entra en la rotación y la app no lo gestiona.
 - RF-01. **Pista con las zonas** de la modalidad elegida. En cada zona hay un campo para el dorsal.
 - RF-01b. **Dorsales:** solo números del 1 al 99 (máximo 2 cifras). Los ceros a la izquierda se eliminan («07» se guarda como «7»).
 - RF-02. **Código de equipo:** exactamente 3 caracteres alfanuméricos, en mayúsculas (se convierten solos al escribir).
-- RF-03. **Sets:** una fila de botones, uno por set (1 a 5).
-  - El **set en curso** aparece resaltado y es el que se edita. Empieza en el set 1. El botón del set siguiente se activa cuando el set en curso tiene QR (código y rotación completos); al tocarlo se pasa a ese set, que empieza en blanco. Los sets posteriores están desactivados.
+- RF-03. **Sets:** una fila de botones, uno por set (1 a 5), que sirven para navegar.
+  - El **set actual** es el último abierto y el único que se modifica. El set siguiente se desbloquea cuando el actual tiene QR (código y rotación completos) y empieza en blanco. Los posteriores están desactivados.
+  - Los **sets anteriores** son historial: al tocarlos se ve su rotación, sin cambiarla. Como las rotaciones suelen ir intercaladas (la del set 1 se repite en el 3…), si se edita o se rota una rotación anterior, o se pulsa Mostrar QR, esa rotación **pasa al set actual** (con el cambio aplicado) y la vista vuelve al set actual. No hay botón de copiar. Si el set actual ya tenía otra rotación, la app pide confirmación antes de sustituirla.
+  - El set que se ve va resaltado; si no es el actual, el actual lleva un borde volt.
   - Cada set guarda su propia rotación en el dispositivo (sobrevive a cerrar la app).
-  - Tocar el botón de un set anterior **copia su rotación** al set en curso como punto de partida. Si el set en curso ya tiene dorsales, la app pide confirmación antes de sustituirlos.   - **Nuevo partido**, en la cabecera: borra todos los sets y vuelve al set 1 (con confirmación). El código de equipo se mantiene.
+  - **Nuevo partido**, en la cabecera: borra todos los sets y vuelve al set 1 (con confirmación). El código de equipo se mantiene.
   - Cada modalidad guarda su propio estado.
 - RF-04. **Botones Rotar ↻ y ↺:** mueven los dorsales una posición en un sentido o en el otro.
   - ↻ (sentido de rotación del voleibol, horario): ZN2 → ZN1, ZN3 → ZN2… ZN1 → última zona.
@@ -99,8 +101,8 @@ Referencia: el código de la app iOS de Clipeo (`VoleyStats/voleyStatsApp`). Los
 
 - RV-01. **Colores:** fondo #070A12 (con #0F1524 y #24304F); volt #CBFB45 como acento principal (con #B6EE1F y #E4FF87); azul #3D6BFF como segundo color (con #6E93FF y #9CB8FF); textos en #FFFFFF / #E2E8F0 y secundarios en #94A3B8 / #64748B. En el logo y el icono se mantienen el fondo #0F1919, el azul #4A9FEE y el gris #E1E1E1.
 - RV-02. **Tipografía:** como Clipeo, Space Grotesk (Medium) para títulos y la fuente del sistema para el texto.
-- RV-03. **Componentes y estilo:** como Clipeo. Tarjetas en blanco al 10 % con radio 15; campos y botones con radio 8; chips en cápsula; acción principal en volt con texto oscuro; elementos seleccionados en volt; al pulsar, escala 0,97. La pista se dibuja con la geometría del tablero de rotación de Clipeo (separación de 2 pt, esquinas de 4 pt y la fila de delante más baja), con las zonas en azul #3D6BFF para que se distinga bien del fondo. Un dorsal repetido pinta su zona en rojo.
-- RV-04. **Icono:** misma familia que el de Clipeo (fondo, trazo azul de contorno y relleno gris), con símbolo propio: una flecha de rotación en sentido horario alrededor de un balón. Se genera con `scripts/render-icons.mjs`.
+- RV-03. **Componentes y estilo:** como Clipeo. Tarjetas en blanco al 10 % con radio 15; campos y botones con radio 8; chips en cápsula; acción principal en volt con texto oscuro; elementos seleccionados en volt; al pulsar, escala 0,97. La pista se dibuja con la geometría del tablero de rotación de Clipeo (separación de 2 pt, esquinas de 4 pt y la fila de delante más baja), con las zonas en el azul de la familia (#4A9FEE, el del logo) y los dorsales en oscuro, para que se distinga bien del fondo. Un dorsal repetido pinta su zona en rojo.
+- RV-04. **Icono:** misma familia que Clipeo y VoleyScout (paleta #0F1919 / #E1E1E1 / #4A9FEE y trazo grueso redondeado de VoleyScout), con símbolo propio, el «bucle de pista»: la red arriba y, debajo, el recorrido de la rotación por las seis zonas con una flecha, algo inclinado. Versión oscura. Se genera con `scripts/render-icons.mjs`.
 
 ## 9. Fuera de alcance
 

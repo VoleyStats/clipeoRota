@@ -162,5 +162,5 @@ const styles = StyleSheet.create({
   setChipText: { fontSize: 14, fontWeight: '600', color: color.textPrimary },
   notScanned: { fontSize: 15, color: color.textMuted },
   court: { maxWidth: 420, alignSelf: 'center' },
-  dorsal: { fontFamily: font.headingBold, fontSize: 40, color: color.textPrimary },
+  dorsal: { fontFamily: font.headingBold, fontSize: 40, color: color.courtInk },
 });
