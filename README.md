@@ -13,7 +13,7 @@ docker compose build                                   # una vez
 docker compose run --rm dev npm install                # tras cambiar dependencias
 
 # Servidor de desarrollo, para abrir con Expo Go en el móvil (misma wifi que el Mac)
-REACT_NATIVE_PACKAGER_HOSTNAME=$(ipconfig getifaddr en0) docker compose run --rm --service-ports dev
+./scripts/dev.sh
 
 docker compose run --rm dev npm test                   # pruebas (jest)
 docker compose run --rm dev npm run typecheck          # tsc
