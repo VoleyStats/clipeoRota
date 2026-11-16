@@ -1,0 +1,36 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "2026 Clipeo",
+    "categories": [
+      "SPORTS"
+    ],
+    "info": {
+      "es-ES": {
+        "title": "Clipeo Rota",
+        "subtitle": "Rotación de voleibol en QR",
+        "promoText": "Prepara la rotación de cada set y entrégala con un QR. El árbitro la escanea y la tiene al momento: sin papel, sin cuentas y sin conexión.",
+        "description": "Clipeo Rota sustituye la hoja de rotación en papel que el entrenador entrega antes de cada set.\n\nENTRENADOR\n• Escribe el dorsal de cada zona sobre la pista y gira la rotación con un toque, en los dos sentidos.\n• Prepara los sets uno tras otro. ¿Repites la rotación de un set anterior? Ábrelo y úsala en el set actual.\n• Pulsa «Mostrar QR»: la rotación sale a pantalla completa, lista para escanear a uno o dos metros.\n• La pantalla no se apaga mientras preparas la rotación.\n\nÁRBITRO Y ANOTADOR\n• Escanea el QR de cada equipo y ve las dos rotaciones juntas, cada dorsal en su zona de la pista.\n• La app avisa si un QR no es válido, si es de otra modalidad o si los equipos han entregado sets distintos.\n\nMODALIDADES\n• Voleibol 6x6, con las zonas oficiales I–VI.\n• Minivoley 3x3 y 4x4.\n\nSIN CUENTAS NI CONEXIÓN\nTodo funciona sin internet, también en pabellones sin cobertura. No hay registro ni publicidad, y la app no recoge datos personales: solo guarda en tu dispositivo el código de equipo y los dorsales.\n\nAntes de usarla en competición, comprueba que tu federación o tu liga aceptan la entrega de la rotación en pantalla.\n\nClipeo Rota es la app hermana de Clipeo, estadísticas de voleibol.",
+        "keywords": [
+          "voley",
+          "vóley",
+          "minivoley",
+          "alineacion",
+          "alineación",
+          "arbitro",
+          "anotador",
+          "entrenador",
+          "set",
+          "acta",
+          "hoja",
+          "6x6",
+          "partido"
+        ],
+        "releaseNotes": "Primera versión de Clipeo Rota.",
+        "supportUrl": "https://clipeostats.com",
+        "marketingUrl": "https://clipeostats.com",
+        "privacyPolicyUrl": "https://clipeostats.com/rota/privacidad"
+      }
+    }
+  }
+}

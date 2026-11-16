@@ -26,7 +26,7 @@ Al arrancar el servidor, escanea el QR de la terminal con la app Expo Go (Androi
 Iconos y splash: se generan desde `scripts/render-icons.mjs`:
 `docker compose run --rm dev bash -c "npm i --no-save sharp && node scripts/render-icons.mjs"`.
 
-Las compilaciones para las tiendas se hacen en la nube con EAS (`npx eas-cli@latest build`), así que tampoco hace falta Xcode ni Android Studio.
+Las compilaciones para las tiendas se hacen en la nube con EAS, así que tampoco hace falta Xcode ni Android Studio. Pasos para publicar: [`docs/publicacion.md`](docs/publicacion.md); textos e imágenes de las fichas: [`store/`](store/).
 
 ## Estructura
 
