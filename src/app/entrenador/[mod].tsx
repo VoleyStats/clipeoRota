@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Keyboard,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -200,27 +201,35 @@ function CoachScreen({ mode }: { mode: Mode }) {
     </Pressable>
   );
 
+  const body = wide ? (
+    <View style={[styles.body, styles.bodyWide]}>
+      {court}
+      <View style={[styles.column, styles.sideColumn]}>
+        {controls}
+        {rotateRow}
+        {qrButton}
+      </View>
+    </View>
+  ) : (
+    <View style={[styles.body, styles.column]}>
+      {controls}
+      {court}
+      {rotateRow}
+      {qrButton}
+    </View>
+  );
+
   return (
     <Screen back title={t.coach} right={newMatchButton}>
-      <Pressable style={styles.flex} onPress={Keyboard.dismiss} accessible={false}>
-        {wide ? (
-          <View style={[styles.body, styles.bodyWide]}>
-            {court}
-            <View style={[styles.column, styles.sideColumn]}>
-              {controls}
-              {rotateRow}
-              {qrButton}
-            </View>
-          </View>
-        ) : (
-          <View style={[styles.body, styles.column]}>
-            {controls}
-            {court}
-            {rotateRow}
-            {qrButton}
-          </View>
-        )}
-      </Pressable>
+      {/* Tapping outside a field hides the keyboard. The browser already does this,
+          and there the wrapper would steal the focus from the field just tapped. */}
+      {Platform.OS === 'web' ? (
+        <View style={styles.flex}>{body}</View>
+      ) : (
+        <Pressable style={styles.flex} onPress={Keyboard.dismiss} accessible={false}>
+          {body}
+        </Pressable>
+      )}
 
       <Modal
         visible={showQr && !!payload}
