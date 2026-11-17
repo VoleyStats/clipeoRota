@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import type { DecodeError } from './core/qr';
 
 /** All user-facing text. Spanish only for now (RNF-04); kept in one place to translate later. */
@@ -45,8 +47,9 @@ export const t = {
   scanTitle: (field: string) => `Escanea el QR del ${field}`,
   close: 'Cerrar',
   cameraNeeded: 'Para escanear hace falta permiso de cámara.',
-  cameraDenied:
-    'La cámara está desactivada para Clipeo Rota. Actívala en los ajustes del dispositivo.',
+  cameraDenied: Platform.OS === 'web'
+    ? 'La cámara está bloqueada para esta página. Permítela desde el candado de la barra de direcciones y vuelve a abrir el escáner.'
+    : 'La cámara está desactivada para Clipeo Rota. Actívala en los ajustes del dispositivo.',
   allowCamera: 'Permitir cámara',
   settings: 'Abrir ajustes',
   sameTeamTitle: 'Mismo equipo',

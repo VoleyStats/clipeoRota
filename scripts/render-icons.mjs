@@ -47,6 +47,10 @@ const outputs = [
   // Splash and the logo on the home screen: symbol on transparent background.
   ['assets/splash-icon.png', svg(1024, { scale: 0.9 })],
   ['assets/favicon.png', svg(48, { background: INK, scale: 0.9 }), true],
+  // Web app (public/ is copied as is by `expo export --platform web`).
+  ['public/icon-180.png', svg(180, { background: INK, scale: 0.84 }), true],
+  ['public/icon-192.png', svg(192, { background: INK, scale: 0.84 }), true],
+  ['public/icon-512.png', svg(512, { background: INK, scale: 0.84 }), true],
 ];
 
 writeFileSync('assets/icon-source.svg', svg(1024, { background: INK, scale: 0.84 }));

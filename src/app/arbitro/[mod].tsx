@@ -1,6 +1,6 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { Button } from '../../components/Button';
 import { Court } from '../../components/Court';
@@ -10,6 +10,7 @@ import { isMode, type Mode } from '../../core/formats';
 import { decodeLineup, encodeLineup, type Lineup } from '../../core/qr';
 import { savePrefs, usePersistentState } from '../../storage';
 import { t } from '../../strings';
+import { confirm, notify } from '../../ui/dialog';
 import { color, font, radius, space } from '../../ui/theme';
 
 type Side = 'A' | 'B';
@@ -51,16 +52,18 @@ function RefereeScreen({ mode }: { mode: Mode }) {
     setScanning(null);
     const result = decodeLineup(data, mode);
     if (!result.ok) {
-      Alert.alert(t.invalidQrTitle, t.decodeError(result.error, mode));
+      notify(t.invalidQrTitle, t.decodeError(result.error, mode));
       return;
     }
     const other: Side = side === 'A' ? 'B' : 'A';
     const store = () => setState((s) => ({ ...s, [side]: result.lineup }));
     if (state[other]?.team === result.lineup.team) {
-      Alert.alert(t.sameTeamTitle, t.sameTeam(result.lineup.team, label(other)), [
-        { text: t.cancel, style: 'cancel' },
-        { text: t.load, onPress: store },
-      ]);
+      confirm({
+        title: t.sameTeamTitle,
+        message: t.sameTeam(result.lineup.team, label(other)),
+        confirmText: t.load,
+        onConfirm: store,
+      });
     } else {
       store();
     }

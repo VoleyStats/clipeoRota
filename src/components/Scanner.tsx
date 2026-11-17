@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useRef } from 'react';
-import { Linking, Modal, StyleSheet, Text, View } from 'react-native';
+import { Linking, Modal, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { t } from '../strings';
@@ -53,7 +53,8 @@ export function Scanner({ visible, title, onScanned, onClose }: Props) {
                 {permission && !permission.canAskAgain ? t.cameraDenied : t.cameraNeeded}
               </Text>
               {permission && !permission.canAskAgain ? (
-                <Button label={t.settings} variant="secondary" onPress={() => Linking.openSettings()} />
+                // On the web the camera permission is changed from the browser's address bar.
+                Platform.OS === 'web' ? null : <Button label={t.settings} variant="secondary" onPress={() => Linking.openSettings()} />
               ) : (
                 <Button label={t.allowCamera} onPress={requestPermission} />
               )}

@@ -66,27 +66,88 @@ Clipeo Rota es la app hermana de Clipeo, estadísticas de voleibol.
 
 ## Capturas de pantalla
 
-Mismas cinco escenas en las dos tiendas, con un texto corto encima de cada una (plantilla de las capturas de Clipeo, RV-07):
+Ya generadas, en `store/screenshots/<idioma>/<dispositivo>/` (`es` y `en`), cinco escenas por dispositivo, con el marco del dispositivo y un texto encima:
 
-| # | Escena | Texto |
+| # | Escena | Texto (es) | Texto (en) |
+| --- | --- | --- | --- |
+| 1 | Entrenador, 6x6, rotación completa | Escribe tu rotación en segundos | Write your rotation in seconds |
+| 2 | QR a pantalla completa | Entrégala con un QR | Hand it over with a QR code |
+| 3 | Árbitro con los equipos A y B | El árbitro ve las dos rotaciones | The referee sees both rotations |
+| 4 | Entrenador, minivoley 4x4 | También minivoley 3x3 y 4x4 | Mini volleyball 3v3 and 4v4 too |
+| 5 | Pantalla inicial | Sin cuentas y sin conexión | No accounts, no connection |
+
+| Carpeta | Tienda | Tamaño |
 | --- | --- | --- |
-| 1 | Entrenador, 6x6, rotación completa | Escribe tu rotación en segundos |
-| 2 | QR a pantalla completa | Entrégala con un QR |
-| 3 | Árbitro con los equipos A y B cargados | El árbitro ve las dos rotaciones |
-| 4 | Entrenador, minivoley 4x4 | También minivoley 3x3 y 4x4 |
-| 5 | Pantalla inicial | Sin cuentas y sin conexión |
+| `iphone/` | App Store, iPhone 6,9" (obligatorio; Apple lo reduce para los iPhone más pequeños) | 1320 × 2868 |
+| `ipad/` | App Store, iPad 13" (obligatorio porque la app admite iPad) | 2064 × 2752 |
+| `android/` | Google Play, teléfono | 1080 × 1920 |
 
-Tamaños:
+La interfaz de la app solo está en español, así que en las capturas en inglés el texto de encima está en inglés y la app sigue en español.
 
-- **App Store, iPhone 6,9"** (obligatorio): 1320 × 2868 px, de 3 a 10 capturas.
-- **App Store, iPad 13"** (obligatorio porque la app admite iPad): 2064 × 2752 px.
-- **Google Play, teléfono** (obligatorio): de 2 a 8 capturas, por ejemplo 1080 × 1920 px.
-- **Google Play, tablet de 7" y 10"** (opcional, necesario para aparecer como app optimizada para tablet).
+Para regenerarlas (por ejemplo, después de cambiar la interfaz):
+
+1. `docker compose run --rm dev npx expo export --platform web` compila la versión web en `dist/`.
+2. `scripts/capture-screens.mjs` hace las capturas en bruto con Chromium (contenedor de Playwright; el comando está en la cabecera del script) y las guarda en `store/screenshots/raw/`.
+3. `scripts/render-screenshots.mjs` añade el marco y los textos.
 
 ## Otros gráficos
 
 - **Icono de App Store (1024 px):** sale de `assets/icon.png` al compilar; no se sube aparte.
 - **Icono de Google Play (512 px):** `store/graphics/play-icon-512.png`.
-- **Imagen destacada de Google Play (1024 × 500):** `store/graphics/play-feature-1024x500.png`.
+- **Imagen destacada de Google Play (1024 × 500):** `store/graphics/play-feature-1024x500.png` (es) y `play-feature-1024x500-en.png` (en).
+- **App Store no tiene cabecera ni imagen destacada:** la ficha de iOS solo lleva icono, capturas y, si se quiere, vídeos de vista previa. La imagen de cabecera que se ve en algunas apps es material que pide el equipo editorial de Apple cuando decide destacar la app.
 
 Se regeneran con `scripts/render-icons.mjs` y `scripts/render-store-graphics.mjs`.
+
+## English (en-US)
+
+Segundo idioma de las dos fichas. En App Store Connect: Información de la app → idioma → «Añadir idioma» → Inglés (EE. UU.); en Play Console: Ficha de Play Store → Gestionar traducciones → Añadir → Inglés (Estados Unidos) – en-US. Los textos de App Store también están en `store.config.json` (`en-US`).
+
+### App Store
+
+| Campo | Texto | Límite |
+| --- | --- | --- |
+| Name | Clipeo Rota | 11/30 |
+| Subtitle | Volleyball lineup in a QR | 25/30 |
+| Promotional text | Set up the rotation for each set and hand it over with a QR code. The referee scans it and has it instantly: no paper, no accounts, no internet. | 144/170 |
+| Keywords | volley,lineup sheet,line-up,rotation,referee,scorer,scoresheet,coach,minivolley,mini,6v6,match,set | 98/100 |
+| Privacy Policy URL | https://clipeostats.com/rota/privacy (hay que publicarla, ver `store/privacy-en.md`) | — |
+| What's New (1.0.0) | First release of Clipeo Rota. | — |
+
+Categoría, URLs de soporte y copyright son los mismos que en español.
+
+### Google Play
+
+| Campo | Texto | Límite |
+| --- | --- | --- |
+| Title | Clipeo Rota: Volleyball Lineup | 30/30 |
+| Short description | Write the rotation for each set and hand it to the referee with a QR. Offline. | 78/80 |
+
+### Description (both stores, 1244 characters)
+
+La descripción avisa de que la interfaz está en español, para que nadie la descargue esperando la app en inglés.
+
+```
+Clipeo Rota replaces the paper lineup sheet the coach hands in before every set.
+
+COACH
+• Type each player's number in their zone on the court, and rotate the lineup with one tap, in either direction.
+• Prepare the sets one after another. Repeating the rotation of an earlier set? Open it and use it for the current set.
+• Tap «Mostrar QR» (Show QR): the rotation fills the screen, ready to be scanned from one or two metres away.
+• The screen stays on while you prepare the rotation.
+
+REFEREE AND SCORER
+• Scan each team's QR code and see both rotations together, every number in its zone on the court.
+• The app warns you if a QR code is not valid, belongs to another format, or if the teams handed in different sets.
+
+FORMATS
+• Volleyball 6v6, with the official zones I–VI.
+• Mini volleyball 3v3 and 4v4.
+
+NO ACCOUNTS, NO CONNECTION
+Everything works offline, even in gyms with no signal. There is no sign-up and no advertising, and the app does not collect personal data: it only stores the team code and the player numbers on your device.
+
+The app's interface is in Spanish. Before using it in competition, check that your federation or league accepts the lineup on a screen.
+
+Clipeo Rota is the sister app of Clipeo, volleyball statistics.
+```

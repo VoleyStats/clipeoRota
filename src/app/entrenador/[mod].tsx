@@ -2,7 +2,6 @@ import { useKeepAwake } from 'expo-keep-awake';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  Alert,
   Keyboard,
   Modal,
   Pressable,
@@ -44,6 +43,7 @@ import {
 } from '../../core/sets';
 import { savePrefs, usePersistentState } from '../../storage';
 import { t } from '../../strings';
+import { confirm } from '../../ui/dialog';
 import { color, font, pressScale, radius, space } from '../../ui/theme';
 
 export default function CoachRoute() {
@@ -82,10 +82,13 @@ function CoachScreen({ mode }: { mode: Mode }) {
   const confirmReplace = (apply: () => void) => {
     if (!wouldReplaceCurrent(state, mode)) return apply();
     Keyboard.dismiss();
-    Alert.alert(t.replaceTitle, t.replaceConfirm(state.viewing, state.current), [
-      { text: t.cancel, style: 'cancel' },
-      { text: t.replace, style: 'destructive', onPress: apply },
-    ]);
+    confirm({
+      title: t.replaceTitle,
+      message: t.replaceConfirm(state.viewing, state.current),
+      confirmText: t.replace,
+      destructive: true,
+      onConfirm: apply,
+    });
   };
 
   const setLineup = (next: string[]) => confirmReplace(() => setState((s) => editLineup(s, next)));
@@ -104,10 +107,13 @@ function CoachScreen({ mode }: { mode: Mode }) {
   };
 
   const onNewMatch = () =>
-    Alert.alert(t.newMatch, t.newMatchConfirm, [
-      { text: t.cancel, style: 'cancel' },
-      { text: t.delete, style: 'destructive', onPress: () => setState((s) => initialCoachState(s.team)) },
-    ]);
+    confirm({
+      title: t.newMatch,
+      message: t.newMatchConfirm,
+      confirmText: t.delete,
+      destructive: true,
+      onConfirm: () => setState((s) => initialCoachState(s.team)),
+    });
 
   const openQr = () => {
     Keyboard.dismiss();

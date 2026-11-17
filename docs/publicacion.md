@@ -73,7 +73,8 @@ docker compose run --rm dev npx eas-cli@latest metadata:push
 
 Sube nombre, subtítulo, texto promocional, descripción, palabras clave, URLs, categoría y copyright desde `store.config.json`. A mano en App Store Connect:
 
-- **Capturas** (iPhone 6,9" e iPad 13"), ver `store/textos.md`.
+- **Capturas:** `store/screenshots/<idioma>/iphone/` (iPhone 6,9") e `ipad/` (iPad 13"), en cada idioma. Ver `store/textos.md`.
+- **Inglés:** añade el idioma Inglés (EE. UU.) en la ficha. `metadata:push` sube sus textos desde `store.config.json`.
 - **Privacidad de la app:** «No recopilamos datos de esta app».
 - **Clasificación por edad:** todas las respuestas «No» → 4+.
 - **Precio:** gratis, todos los países donde se publique Clipeo.
@@ -97,7 +98,7 @@ En Play Console, sección «Contenido de la aplicación» (todo obligatorio ante
 | Seguridad de los datos | No se recogen ni se comparten datos. La cámara se usa solo en el dispositivo y no cuenta como dato recogido |
 | App gubernamental, financiera, de salud | No |
 
-Ficha principal de la tienda: título, descripción breve, descripción completa, icono de 512 px, imagen destacada y capturas, todo en `store/textos.md` y `store/graphics/`.
+Ficha principal de la tienda: título, descripción breve, descripción completa, icono de 512 px, imagen destacada y capturas (`store/screenshots/<idioma>/android/`), todo en `store/textos.md`, `store/graphics/` y `store/screenshots/`. Añade la traducción en-US (Gestionar traducciones) con los textos en inglés, la imagen destacada `-en` y las capturas `en/`.
 
 Si la cuenta de Play Console es **personal y se creó después de noviembre de 2023**, Google exige una prueba cerrada con al menos 12 testers durante 14 días antes de poder publicar en producción. Las cuentas de organización no tienen este requisito.
 
@@ -108,8 +109,7 @@ Si la cuenta de Play Console es **personal y se creó después de noviembre de 2
 
 ## Pendiente antes de la primera publicación
 
-- [ ] Publicar la política de privacidad en https://clipeostats.com/rota/privacidad (repositorio web), con el nombre del titular.
-- [ ] Hacer las capturas (iPhone 6,9", iPad 13" y teléfono Android) y añadirles los textos.
+- [ ] Publicar la política de privacidad en https://clipeostats.com/rota/privacidad y su versión en inglés en https://clipeostats.com/rota/privacy (repositorio web), con el nombre del titular.
 - [ ] Decidir el título de Google Play (el de los requisitos no cabe en 30 caracteres).
 - [ ] Confirmar con la federación que acepta la rotación en pantalla (pregunta abierta de los requisitos).
 
@@ -118,3 +118,23 @@ Si la cuenta de Play Console es **personal y se creó después de noviembre de 2
 1. Sube `expo.version` en `app.json` (por ejemplo, 1.0.1 o 1.1.0).
 2. `eas build --profile production --platform all` y `eas submit --platform all --latest`.
 3. Actualiza `releaseNotes` en `store.config.json` y `eas metadata:push`.
+
+## Versión web (Vercel)
+
+La misma app se publica como web estática. `vercel.json` lleva la configuración:
+- instala con `npm ci`;
+- compila con `npx expo export --platform web` y publica la carpeta `dist/`;
+- envía todas las rutas a `index.html`, para que recargar en `/entrenador/6x6` funcione.
+
+`public/` tiene el `index.html` (en español, con fondo oscuro) y el manifiesto para instalarla en la pantalla de inicio; los iconos de `public/` salen de `scripts/render-icons.mjs`.
+
+Diferencias con las apps:
+- Los avisos y confirmaciones usan los diálogos del navegador (`src/ui/dialog.web.ts`).
+- La cámara necesita HTTPS (Vercel ya lo da) y su permiso se cambia desde el candado de la barra de direcciones.
+- La primera vez hace falta conexión para cargarla.
+
+Para desplegar hay dos formas:
+- **Automático:** en vercel.com → Add New → Project, importa `VoleyStats/clipeoRota`. No hay que tocar ningún ajuste porque los lee de `vercel.json`. Cada push a `main` despliega a producción y cada rama tiene su URL de vista previa.
+- **Desde el contenedor:** con `VERCEL_TOKEN` en `.env` (se crea en vercel.com/account/tokens), ejecuta `docker compose run --rm dev npx vercel@latest deploy --prod --token "$VERCEL_TOKEN"`.
+
+Dominio: en el proyecto de Vercel, Settings → Domains, añade por ejemplo `rota.clipeostats.com` y crea en el DNS el registro CNAME que indique Vercel.

@@ -30,6 +30,31 @@
         "supportUrl": "https://clipeostats.com",
         "marketingUrl": "https://clipeostats.com",
         "privacyPolicyUrl": "https://clipeostats.com/rota/privacidad"
+      },
+      "en-US": {
+        "title": "Clipeo Rota",
+        "subtitle": "Volleyball lineup in a QR",
+        "promoText": "Set up the rotation for each set and hand it over with a QR code. The referee scans it and has it instantly: no paper, no accounts, no internet.",
+        "description": "Clipeo Rota replaces the paper lineup sheet the coach hands in before every set.\n\nCOACH\n• Type each player's number in their zone on the court, and rotate the lineup with one tap, in either direction.\n• Prepare the sets one after another. Repeating the rotation of an earlier set? Open it and use it for the current set.\n• Tap «Mostrar QR» (Show QR): the rotation fills the screen, ready to be scanned from one or two metres away.\n• The screen stays on while you prepare the rotation.\n\nREFEREE AND SCORER\n• Scan each team's QR code and see both rotations together, every number in its zone on the court.\n• The app warns you if a QR code is not valid, belongs to another format, or if the teams handed in different sets.\n\nFORMATS\n• Volleyball 6v6, with the official zones I–VI.\n• Mini volleyball 3v3 and 4v4.\n\nNO ACCOUNTS, NO CONNECTION\nEverything works offline, even in gyms with no signal. There is no sign-up and no advertising, and the app does not collect personal data: it only stores the team code and the player numbers on your device.\n\nThe app's interface is in Spanish. Before using it in competition, check that your federation or league accepts the lineup on a screen.\n\nClipeo Rota is the sister app of Clipeo, volleyball statistics.",
+        "keywords": [
+          "volley",
+          "lineup sheet",
+          "line-up",
+          "rotation",
+          "referee",
+          "scorer",
+          "scoresheet",
+          "coach",
+          "minivolley",
+          "mini",
+          "6v6",
+          "match",
+          "set"
+        ],
+        "releaseNotes": "First release of Clipeo Rota.",
+        "supportUrl": "https://clipeostats.com",
+        "marketingUrl": "https://clipeostats.com",
+        "privacyPolicyUrl": "https://clipeostats.com/rota/privacy"
       }
     }
   }

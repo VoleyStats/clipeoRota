@@ -16,6 +16,7 @@ services:
       - EXPO_NO_TELEMETRY=1
       # Alternativa a `expo login`: token de acceso de expo.dev en .env (no se sube a git).
       - EXPO_TOKEN=${EXPO_TOKEN:-}
+      - VERCEL_TOKEN=${VERCEL_TOKEN:-}
     stdin_open: true
     tty: true
     command: npx expo start
