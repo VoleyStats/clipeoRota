@@ -30,7 +30,9 @@ export const t = {
   replaceConfirm: (from: number, to: number) =>
     `El set ${to} ya tiene otra rotación. ¿Sustituirla por la del set ${from}?`,
   replace: 'Sustituir',
-  newMatchConfirm: '¿Borrar las rotaciones de todos los sets? El código de equipo se mantiene.',
+  newMatchConfirm: '¿Borrar el código de equipo y las rotaciones de todos los sets?',
+  teamLockedTitle: 'Código de equipo',
+  teamLocked: 'El código no se puede cambiar después de mostrar el QR. Para usar otro, empieza un nuevo partido.',
   delete: 'Borrar',
   cancel: 'Cancelar',
   showQr: 'Mostrar QR',

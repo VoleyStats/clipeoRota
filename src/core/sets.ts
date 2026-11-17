@@ -1,5 +1,5 @@
 import { emptyLineup, FORMATS, type Mode } from './formats';
-import { normalizeDorsal, normalizeTeamCode, validateLineup } from './lineup';
+import { normalizeDorsal, normalizeTeamCode, TEAM_CODE_LENGTH, validateLineup } from './lineup';
 
 export const MAX_SETS = 5;
 
@@ -18,10 +18,19 @@ export interface CoachState {
   viewing: number;
   /** Rotation per set number. Missing set = blank. */
   sets: Record<number, string[]>;
+  /** The team code is fixed: a QR has been shown in this match (the referee may have it). */
+  teamLocked: boolean;
 }
 
-export function initialCoachState(team = ''): CoachState {
-  return { team, current: 1, viewing: 1, sets: {} };
+/** Blank match: no team code and no rotations ("Nuevo partido"). */
+export function initialCoachState(): CoachState {
+  return { team: '', current: 1, viewing: 1, sets: {}, teamLocked: false };
+}
+
+/** The team code can be changed until the first QR of the match is shown; then only a new match clears it. */
+export function setTeam(state: CoachState, team: string): CoachState {
+  if (state.teamLocked) return state;
+  return { ...state, team: normalizeTeamCode(team) };
 }
 
 export function viewedLineup(state: CoachState, mode: Mode): string[] {
@@ -74,10 +83,15 @@ export function adoptViewedLineup(state: CoachState, mode: Mode): CoachState {
   return editLineup(state, [...viewedLineup(state, mode)]);
 }
 
+/** State once the QR is shown: the rotation on screen goes to the current set and the team code is fixed. */
+export function showQr(state: CoachState, mode: Mode): CoachState {
+  return { ...adoptViewedLineup(state, mode), teamLocked: true };
+}
+
 /** Validates data read from storage; returns null if it doesn't fit the modality. */
 export function parseCoachState(raw: unknown, mode: Mode): CoachState | null {
   if (typeof raw !== 'object' || raw === null) return null;
-  const { team, current, viewing, sets } = raw as Record<string, unknown>;
+  const { team, current, viewing, sets, teamLocked } = raw as Record<string, unknown>;
   const isSet = (n: unknown): n is number =>
     typeof n === 'number' && Number.isInteger(n) && n >= 1 && n <= MAX_SETS;
   if (typeof team !== 'string' || !isSet(current)) return null;
@@ -90,8 +104,10 @@ export function parseCoachState(raw: unknown, mode: Mode): CoachState | null {
     if (!isSet(n) || !Array.isArray(value) || value.length !== zones) continue;
     parsed[n] = value.map((d) => (typeof d === 'string' ? normalizeDorsal(d) : ''));
   }
+  const code = normalizeTeamCode(team);
   return {
-    team: normalizeTeamCode(team),
+    team: code,
+    teamLocked: teamLocked === true && code.length === TEAM_CODE_LENGTH,
     current,
     viewing: isSet(viewing) && viewing <= current ? viewing : current,
     sets: parsed,

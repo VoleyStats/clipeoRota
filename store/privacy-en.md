@@ -35,7 +35,7 @@ The app does not ask for or store names, dates of birth, photos or any other pla
 
 ## How to delete your data
 
-You can delete the rotations with «Nuevo partido» (New match) in the coach view. Uninstalling the app deletes all the data it stores.
+You can delete the team code and the rotations with «Nuevo partido» (New match) in the coach view. Uninstalling the app deletes all the data it stores.
 
 ## Changes
 

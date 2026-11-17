@@ -35,7 +35,7 @@ La app no pide ni guarda nombres, fechas de nacimiento, fotos ni ningún otro da
 
 ## Cómo borrar tus datos
 
-Puedes borrar las rotaciones con «Nuevo partido» en la vista del entrenador. Al desinstalar la app se borran todos los datos que guarda.
+Puedes borrar el código de equipo y las rotaciones con «Nuevo partido» en la vista del entrenador. Al desinstalar la app se borran todos los datos que guarda.
 
 ## Cambios
 

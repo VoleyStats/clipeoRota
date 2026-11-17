@@ -31,7 +31,6 @@ import {
 } from '../../core/lineup';
 import { encodeLineup } from '../../core/qr';
 import {
-  adoptViewedLineup,
   canOpenSet,
   wouldReplaceCurrent,
   editLineup,
@@ -39,12 +38,14 @@ import {
   MAX_SETS,
   openSet,
   parseCoachState,
+  setTeam,
+  showQr as showQrState,
   viewedLineup,
   type CoachState,
 } from '../../core/sets';
 import { savePrefs, usePersistentState } from '../../storage';
 import { t } from '../../strings';
-import { confirm } from '../../ui/dialog';
+import { confirm, notify } from '../../ui/dialog';
 import { color, font, pressScale, radius, space } from '../../ui/theme';
 
 export default function CoachRoute() {
@@ -113,13 +114,13 @@ function CoachScreen({ mode }: { mode: Mode }) {
       message: t.newMatchConfirm,
       confirmText: t.delete,
       destructive: true,
-      onConfirm: () => setState((s) => initialCoachState(s.team)),
+      onConfirm: () => setState(initialCoachState()),
     });
 
   const openQr = () => {
     Keyboard.dismiss();
     confirmReplace(() => {
-      setState((s) => adoptViewedLineup(s, mode));
+      setState((s) => showQrState(s, mode));
       setShowQr(true);
     });
   };
@@ -133,9 +134,11 @@ function CoachScreen({ mode }: { mode: Mode }) {
         <Text style={styles.label}>{t.teamCodeShort}</Text>
         <CodeInput
           value={state.team}
-          onChange={(team) => setState((s) => ({ ...s, team }))}
+          onChange={(team) => setState((s) => setTeam(s, team))}
           length={TEAM_CODE_LENGTH}
           normalize={normalizeTeamCode}
+          locked={state.teamLocked}
+          onLockedPress={() => notify(t.teamLockedTitle, t.teamLocked)}
           accessibilityLabel={t.teamCode}
         />
       </View>

@@ -7,7 +7,17 @@ import {
   validateLineup,
 } from '../lineup';
 import { decodeLineup, encodeLineup } from '../qr';
-import { adoptViewedLineup, canOpenSet, editLineup, openSet, parseCoachState, wouldReplaceCurrent } from '../sets';
+import {
+  adoptViewedLineup,
+  canOpenSet,
+  editLineup,
+  initialCoachState,
+  openSet,
+  parseCoachState,
+  setTeam,
+  showQr,
+  wouldReplaceCurrent,
+} from '../sets';
 
 describe('formats', () => {
   it.each(MODES)('%s layout contains each zone exactly once', (mode) => {
@@ -109,7 +119,7 @@ describe('QR', () => {
 });
 
 describe('sets', () => {
-  const S = (o: object) => ({ team: 'ABC', current: 1, viewing: 1, sets: {}, ...o });
+  const S = (o: object) => ({ team: 'ABC', current: 1, viewing: 1, sets: {}, teamLocked: false, ...o });
 
   it('set buttons open earlier sets and the next one once the current has a QR', () => {
     const state = S({ current: 2, viewing: 2, sets: { 1: ['1', '2', '3'], 2: ['1', '', '3'] } });
@@ -154,7 +164,28 @@ describe('sets', () => {
 
   it('drops stored sets that do not fit the modality', () => {
     const raw = { team: 'abc', current: 2, viewing: 4, sets: { 1: ['1', '2', '3'], 2: ['1', '2'], 9: ['1', '2', '3'] } };
-    expect(parseCoachState(raw, '3x3')).toEqual({ team: 'ABC', current: 2, viewing: 2, sets: { 1: ['1', '2', '3'] } });
+    expect(parseCoachState(raw, '3x3')).toEqual({ team: 'ABC', current: 2, viewing: 2, sets: { 1: ['1', '2', '3'] }, teamLocked: false });
     expect(parseCoachState({ team: 'A', current: 0, sets: {} }, '3x3')).toBeNull();
+  });
+});
+
+describe('team code', () => {
+  it('can be changed until the first QR is shown, then only a new match clears it', () => {
+    let s = setTeam(initialCoachState(), 'clp');
+    expect(s.team).toBe('CLP');
+    s = setTeam(s, 'rot');
+    expect(s.team).toBe('ROT');
+
+    s = showQr({ ...s, sets: { 1: ['1', '2', '3'] } }, '3x3');
+    expect(s.teamLocked).toBe(true);
+    expect(setTeam(s, 'ABC')).toBe(s);
+    expect(initialCoachState()).toMatchObject({ team: '', teamLocked: false });
+  });
+
+  it('is restored from storage only with a complete code', () => {
+    const raw = { team: 'CLP', current: 1, viewing: 1, sets: {}, teamLocked: true };
+    expect(parseCoachState(raw, '3x3')?.teamLocked).toBe(true);
+    expect(parseCoachState({ ...raw, team: 'CL' }, '3x3')?.teamLocked).toBe(false);
+    expect(parseCoachState({ ...raw, teamLocked: undefined }, '3x3')?.teamLocked).toBe(false);
   });
 });

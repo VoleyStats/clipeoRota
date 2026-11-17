@@ -37,13 +37,13 @@ El líbero no entra en la rotación y la app no lo gestiona.
 
 - RF-01. **Pista con las zonas** de la modalidad elegida. En cada zona hay un campo para el dorsal.
 - RF-01b. **Dorsales:** solo números del 1 al 99 (máximo 2 cifras). Los ceros a la izquierda se eliminan («07» se guarda como «7»).
-- RF-02. **Código de equipo:** exactamente 3 caracteres alfanuméricos, en mayúsculas (se convierten solos al escribir).
+- RF-02. **Código de equipo:** exactamente 3 caracteres alfanuméricos, en mayúsculas (se convierten solos al escribir). Se puede cambiar hasta que se muestra el primer QR del partido (el árbitro ya puede tenerlo). A partir de ahí queda fijo: se muestra en volt, sin aspecto de campo, y al tocarlo la app explica que solo se cambia con **Nuevo partido**.
 - RF-03. **Sets:** una fila de botones, uno por set (1 a 5), que sirven para navegar.
   - El **set actual** es el último abierto y el único que se modifica. El set siguiente se desbloquea cuando el actual tiene QR (código y rotación completos) y empieza en blanco. Los posteriores están desactivados.
   - Los **sets anteriores** son historial: al tocarlos se ve su rotación, sin cambiarla. Como las rotaciones suelen ir intercaladas (la del set 1 se repite en el 3…), si se edita o se rota una rotación anterior, o se pulsa Mostrar QR, esa rotación **pasa al set actual** (con el cambio aplicado) y la vista vuelve al set actual. No hay botón de copiar. Si el set actual ya tenía otra rotación, la app pide confirmación antes de sustituirla.
   - El set que se ve va resaltado; si no es el actual, el actual lleva un borde volt.
   - Cada set guarda su propia rotación en el dispositivo (sobrevive a cerrar la app).
-  - **Nuevo partido**, en la cabecera: borra todos los sets y vuelve al set 1 (con confirmación). El código de equipo se mantiene.
+  - **Nuevo partido**, en la cabecera: borra el código de equipo y todos los sets y vuelve al set 1 (con confirmación).
   - Cada modalidad guarda su propio estado.
 - RF-04. **Botones Rotar ↻ y ↺:** mueven los dorsales una posición en un sentido o en el otro.
   - ↻ (sentido de rotación del voleibol, horario): ZN2 → ZN1, ZN3 → ZN2… ZN1 → última zona.
