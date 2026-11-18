@@ -60,7 +60,7 @@ export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
       },
       { h: 'Cómo borrar tus datos' },
       {
-        p: 'En la vista del entrenador, «Nuevo partido» borra el código de equipo y todas las rotaciones. Al desinstalar la app se borra todo lo que guarda; en la web, al borrar los datos del sitio en el navegador.',
+        p: 'El código de equipo, las rotaciones y los QR escaneados se borran solos 5 horas después del último cambio. En la vista del entrenador, «Nuevo partido» los borra en el momento. Al desinstalar la app se borra todo lo que guarda; en la web, al borrar los datos del sitio en el navegador.',
       },
       { h: 'Tus derechos' },
       {
@@ -114,7 +114,7 @@ export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
       },
       { h: 'How to delete your data' },
       {
-        p: 'In the coach view, «Nuevo partido» (New match) deletes the team code and all the rotations. Uninstalling the app deletes everything it stores; on the website, so does clearing the site data in your browser.',
+        p: 'The team code, the rotations and the scanned QR codes are deleted automatically 5 hours after the last change. In the coach view, «Nuevo partido» (New match) deletes them right away. Uninstalling the app deletes everything it stores; on the website, so does clearing the site data in your browser.',
       },
       { h: 'Your rights' },
       {

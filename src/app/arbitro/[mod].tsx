@@ -6,6 +6,7 @@ import { Button } from '../../components/Button';
 import { Court } from '../../components/Court';
 import { Scanner } from '../../components/Scanner';
 import { Screen } from '../../components/Screen';
+import { MATCH_TTL_MS } from '../../core/expiry';
 import { isMode, type Mode } from '../../core/formats';
 import { decodeLineup, encodeLineup, type Lineup } from '../../core/qr';
 import { savePrefs, usePersistentState } from '../../storage';
@@ -43,6 +44,7 @@ function RefereeScreen({ mode }: { mode: Mode }) {
     `referee:${mode}`,
     () => ({ A: null, B: null }),
     (raw) => parseRefereeState(raw, mode),
+    { ttl: MATCH_TTL_MS },
   );
   const [scanning, setScanning] = useState<Side | null>(null);
 

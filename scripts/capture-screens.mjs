@@ -69,8 +69,12 @@ for (const [device, { width, height, scale }] of Object.entries(DEVICES)) {
   for (const scene of SCENES) {
     const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale, hasTouch: true, isMobile: device !== 'ipad' });
     const storage = { prefs: { mode: '6x6', profile: null }, ...scene.storage };
+    // Match data is stored with the time of its last change (src/core/expiry.ts); prefs aren't.
     await context.addInitScript((entries) => {
-      for (const [key, value] of Object.entries(entries)) localStorage.setItem(key, JSON.stringify(value));
+      for (const [key, value] of Object.entries(entries)) {
+        const stored = key === 'prefs' ? value : { savedAt: Date.now(), data: value };
+        localStorage.setItem(key, JSON.stringify(stored));
+      }
     }, storage);
     const page = await context.newPage();
     await page.goto(`http://localhost:${PORT}${scene.path}`, { waitUntil: 'networkidle' });

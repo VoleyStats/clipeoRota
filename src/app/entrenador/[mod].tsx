@@ -19,6 +19,7 @@ import { Button } from '../../components/Button';
 import { CodeInput } from '../../components/CodeInput';
 import { Court } from '../../components/Court';
 import { Screen } from '../../components/Screen';
+import { MATCH_TTL_MS } from '../../core/expiry';
 import { isMode, type Mode } from '../../core/formats';
 import {
   duplicateZones,
@@ -70,6 +71,7 @@ function CoachScreen({ mode }: { mode: Mode }) {
     `coach:${mode}`,
     () => initialCoachState(),
     (raw) => parseCoachState(raw, mode),
+    { ttl: MATCH_TTL_MS },
   );
   const [showQr, setShowQr] = useState(false);
   const [activeZone, setActiveZone] = useState<number | null>(null);

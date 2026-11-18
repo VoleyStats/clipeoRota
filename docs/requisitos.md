@@ -45,6 +45,7 @@ El líbero no entra en la rotación y la app no lo gestiona.
   - Cada set guarda su propia rotación en el dispositivo (sobrevive a cerrar la app).
   - **Nuevo partido**, en la cabecera: borra el código de equipo y todos los sets y vuelve al set 1 (con confirmación).
   - Cada modalidad guarda su propio estado.
+  - **Caducidad:** 5 horas después del último cambio, el partido se borra solo (como con Nuevo partido), al abrir la app o al volver a ella. Lo mismo vale para las rotaciones escaneadas en la vista del árbitro. La modalidad y el último rol no caducan.
 - RF-04. **Botones Rotar ↻ y ↺:** mueven los dorsales una posición en un sentido o en el otro.
   - ↻ (sentido de rotación del voleibol, horario): ZN2 → ZN1, ZN3 → ZN2… ZN1 → última zona.
   - ↺ (sentido contrario): ZN1 → ZN2, ZN2 → ZN3… última zona → ZN1.

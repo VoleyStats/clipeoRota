@@ -1,3 +1,4 @@
+import { isExpired, MATCH_TTL_MS, readStamped, stamp } from '../expiry';
 import { emptyLineup, FORMATS, MODES } from '../formats';
 import {
   duplicateZones,
@@ -187,5 +188,28 @@ describe('team code', () => {
     expect(parseCoachState(raw, '3x3')?.teamLocked).toBe(true);
     expect(parseCoachState({ ...raw, team: 'CL' }, '3x3')?.teamLocked).toBe(false);
     expect(parseCoachState({ ...raw, teamLocked: undefined }, '3x3')?.teamLocked).toBe(false);
+  });
+});
+
+describe('expiry', () => {
+  const now = 1_800_000_000_000;
+  const hour = 60 * 60 * 1000;
+
+  it('match data lasts 5 hours from the last change', () => {
+    expect(MATCH_TTL_MS).toBe(5 * hour);
+    expect(isExpired(now - 5 * hour + 1, now, MATCH_TTL_MS)).toBe(false);
+    expect(isExpired(now - 5 * hour, now, MATCH_TTL_MS)).toBe(true);
+  });
+
+  it('reads back fresh values and drops expired ones', () => {
+    const data = { team: 'CLP' };
+    expect(readStamped(stamp(data, now - hour), now, MATCH_TTL_MS)).toEqual({ savedAt: now - hour, data });
+    expect(readStamped(stamp(data, now - 6 * hour), now, MATCH_TTL_MS)).toBeNull();
+  });
+
+  it('treats values without a time as expired', () => {
+    expect(readStamped({ team: 'CLP', current: 1, sets: {} }, now, MATCH_TTL_MS)).toBeNull();
+    expect(readStamped({ savedAt: 'ayer', data: {} }, now, MATCH_TTL_MS)).toBeNull();
+    expect(readStamped(null, now, MATCH_TTL_MS)).toBeNull();
   });
 });
