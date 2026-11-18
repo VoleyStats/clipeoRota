@@ -29,6 +29,8 @@ export const DEVICES = {
 
 const coach6 = {
   team: 'CLP',
+  // Set 2 means set 1's QR was already shown, so the code is fixed.
+  teamLocked: true,
   current: 2,
   viewing: 2,
   sets: {
@@ -36,7 +38,7 @@ const coach6 = {
     2: ['12', '3', '9', '1', '15', '7'],
   },
 };
-const coach4 = { team: 'MIN', current: 1, viewing: 1, sets: { 1: ['4', '8', '11', '2'] } };
+const coach4 = { team: 'MIN', teamLocked: false, current: 1, viewing: 1, sets: { 1: ['4', '8', '11', '2'] } };
 const referee6 = {
   A: { mode: '6x6', team: 'CLP', set: 2, dorsales: ['12', '3', '9', '1', '15', '7'] },
   B: { mode: '6x6', team: 'ROT', set: 2, dorsales: ['4', '10', '22', '8', '5', '11'] },

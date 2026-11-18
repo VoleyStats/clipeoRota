@@ -15,7 +15,7 @@ Los textos de App Store también están en `store.config.json` para subirlos con
 | Precio | Gratis, sin compras dentro de la app | — |
 | Clasificación por edad | 4+ (todas las respuestas del cuestionario: «No») | — |
 | URL de soporte | https://clipeostats.com | — |
-| URL de la política de privacidad | https://clipeostats.com/rota/privacidad (hay que publicarla, ver `store/privacidad.md`) | — |
+| URL de la política de privacidad | https://rota.clipeostats.com/privacy (página de la propia web, texto en `src/privacyPolicy.ts`) | — |
 | Copyright | 2026 Clipeo | — |
 | Notas de la versión 1.0.0 | Primera versión de Clipeo Rota. | — |
 
@@ -31,7 +31,7 @@ Las palabras clave no repiten «voleibol» ni «rotación» porque ya están en 
 | Etiquetas | Deportes, Voleibol (si aparece en la lista) | — |
 | Correo de contacto | hola@clipeostats.com | — |
 | Sitio web | https://clipeostats.com | — |
-| Política de privacidad | https://clipeostats.com/rota/privacidad | — |
+| Política de privacidad | https://rota.clipeostats.com/privacy | — |
 
 El título que pedían los requisitos, «Clipeo Rota: alineación de voleibol», tiene 35 caracteres y Google Play admite 30. Alternativa con el mismo patrón «Marca: categoría»: «Clipeo Rota: alineación vóley» (29).
 
@@ -78,7 +78,8 @@ Ya generadas, en `store/screenshots/<idioma>/<dispositivo>/` (`es` y `en`), cinc
 
 | Carpeta | Tienda | Tamaño |
 | --- | --- | --- |
-| `iphone/` | App Store, iPhone 6,9" (obligatorio; Apple lo reduce para los iPhone más pequeños) | 1320 × 2868 |
+| `iphone/` | App Store, iPhone 6,9" | 1320 × 2868 |
+| `iphone-6.3/` | App Store, iPhone 6,3" (si App Store Connect pide 1206 × 2622 o 1179 × 2556) | 1206 × 2622 |
 | `ipad/` | App Store, iPad 13" (obligatorio porque la app admite iPad) | 2064 × 2752 |
 | `android/` | Google Play, teléfono | 1080 × 1920 |
 
@@ -95,9 +96,11 @@ Para regenerarlas (por ejemplo, después de cambiar la interfaz):
 - **Icono de App Store (1024 px):** sale de `assets/icon.png` al compilar; no se sube aparte.
 - **Icono de Google Play (512 px):** `store/graphics/play-icon-512.png`.
 - **Imagen destacada de Google Play (1024 × 500):** `store/graphics/play-feature-1024x500.png` (es) y `play-feature-1024x500-en.png` (en).
-- **App Store no tiene cabecera ni imagen destacada:** la ficha de iOS solo lleva icono, capturas y, si se quiere, vídeos de vista previa. La imagen de cabecera que se ve en algunas apps es material que pide el equipo editorial de Apple cuando decide destacar la app.
+- **App Store, «Header and Search Results»** (iOS 27 en adelante; pestaña de la versión en App Store Connect). Llevan el nombre y el lema en la zona segura que marca Apple, con dos pantallas de la app a los lados. No tienen transparencia. Hay uno por idioma:
+  - Cabecera de la ficha (Header): `store/graphics/appstore-header-es.png` / `-en.png`, 3840 × 1646.
+  - Resultados de búsqueda (Search Results): `store/graphics/appstore-search-es.png` / `-en.png`, 3840 × 2560. No marques «usar la cabecera en los resultados de búsqueda»: cada sitio tiene su imagen.
 
-Se regeneran con `scripts/render-icons.mjs` y `scripts/render-store-graphics.mjs`.
+Se regeneran con `scripts/render-icons.mjs`, `scripts/render-store-graphics.mjs` y `scripts/render-store-header.mjs`.
 
 ## English (en-US)
 
@@ -111,7 +114,7 @@ Segundo idioma de las dos fichas. En App Store Connect: Información de la app �
 | Subtitle | Volleyball lineup in a QR | 25/30 |
 | Promotional text | Set up the rotation for each set and hand it over with a QR code. The referee scans it and has it instantly: no paper, no accounts, no internet. | 144/170 |
 | Keywords | volley,lineup sheet,line-up,rotation,referee,scorer,scoresheet,coach,minivolley,mini,6v6,match,set | 98/100 |
-| Privacy Policy URL | https://clipeostats.com/rota/privacy (hay que publicarla, ver `store/privacy-en.md`) | — |
+| Privacy Policy URL | https://rota.clipeostats.com/privacy?lang=en | — |
 | What's New (1.0.0) | First release of Clipeo Rota. | — |
 
 Categoría, URLs de soporte y copyright son los mismos que en español.

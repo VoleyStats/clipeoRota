@@ -2,7 +2,7 @@
 
 Las compilaciones se hacen en la nube con **EAS** (Expo Application Services), así que no hacen falta Xcode ni Android Studio. Todos los comandos se lanzan desde el contenedor de desarrollo, con la sesión de Expo ya iniciada (`npx expo whoami`).
 
-Textos e imágenes de las fichas: [`store/textos.md`](../store/textos.md). Política de privacidad: [`store/privacidad.md`](../store/privacidad.md).
+Textos e imágenes de las fichas: [`store/textos.md`](../store/textos.md). Política de privacidad: https://rota.clipeostats.com/privacy (ruta `/privacy` de la propia app, texto en [`src/privacyPolicy.ts`](../src/privacyPolicy.ts); `?lang=en` para la versión en inglés).
 
 ## Datos fijos
 
@@ -73,7 +73,8 @@ docker compose run --rm dev npx eas-cli@latest metadata:push
 
 Sube nombre, subtítulo, texto promocional, descripción, palabras clave, URLs, categoría y copyright desde `store.config.json`. A mano en App Store Connect:
 
-- **Capturas:** `store/screenshots/<idioma>/iphone/` (iPhone 6,9") e `ipad/` (iPad 13"), en cada idioma. Ver `store/textos.md`.
+- **Capturas:** `store/screenshots/<idioma>/iphone/` (iPhone 6,9", 1320 × 2868), `iphone-6.3/` (iPhone 6,3", 1206 × 2622) e `ipad/` (iPad 13"), en cada idioma. Sube en cada casilla la carpeta cuyo tamaño pida App Store Connect. Ver `store/textos.md`.
+- **Header and Search Results:** `store/graphics/appstore-header-<idioma>.png` y `appstore-search-<idioma>.png`.
 - **Inglés:** añade el idioma Inglés (EE. UU.) en la ficha. `metadata:push` sube sus textos desde `store.config.json`.
 - **Privacidad de la app:** «No recopilamos datos de esta app».
 - **Clasificación por edad:** todas las respuestas «No» → 4+.
@@ -90,7 +91,7 @@ En Play Console, sección «Contenido de la aplicación» (todo obligatorio ante
 
 | Formulario | Respuesta |
 | --- | --- |
-| Política de privacidad | https://clipeostats.com/rota/privacidad |
+| Política de privacidad | https://rota.clipeostats.com/privacy |
 | Acceso a la aplicación | Toda la funcionalidad está disponible sin restricciones |
 | Anuncios | No contiene anuncios |
 | Clasificación de contenido (IARC) | Categoría «Utilidades, productividad…» o «Referencia»; todas las respuestas «No» → PEGI 3 |
@@ -109,7 +110,6 @@ Si la cuenta de Play Console es **personal y se creó después de noviembre de 2
 
 ## Pendiente antes de la primera publicación
 
-- [ ] Publicar la política de privacidad en https://clipeostats.com/rota/privacidad y su versión en inglés en https://clipeostats.com/rota/privacy (repositorio web), con el nombre del titular.
 - [ ] Decidir el título de Google Play (el de los requisitos no cabe en 30 caracteres).
 - [ ] Confirmar con la federación que acepta la rotación en pantalla (pregunta abierta de los requisitos).
 

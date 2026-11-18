@@ -23,6 +23,9 @@ const BEZEL_EDGE = '#3A4560';
 // Canvas in px, the status bar height in px of the raw capture, and the frame shape.
 const DEVICES = {
   iphone: { width: 1320, height: 2868, statusBar: 62 * 3, scale: 3, bezel: 0.032, radius: 0.13 },
+  // iPhone 6.3" (1206 × 2622): App Store Connect asks for it when the 6.9" set isn't the one it shows.
+  // Same captures as the 6.9" iPhone; only the canvas changes.
+  'iphone-6.3': { width: 1206, height: 2622, statusBar: 62 * 3, scale: 3, bezel: 0.032, radius: 0.13, raw: 'iphone' },
   ipad: { width: 2064, height: 2752, statusBar: 32 * 2, scale: 2, bezel: 0.025, radius: 0.045 },
   android: { width: 1080, height: 1920, statusBar: 24 * 3, scale: 3, bezel: 0.03, radius: 0.08 },
 };
@@ -77,9 +80,10 @@ for (const [device, d] of Object.entries(DEVICES)) {
   const k = Math.min(W / 1320, H / 2868);
   const captionH = H * (device === 'ipad' ? 0.17 : 0.2);
 
-  for (const file of readdirSync(join(RAW, device)).filter((f) => f.endsWith('.png'))) {
+  const rawDir = join(RAW, d.raw ?? device);
+  for (const file of readdirSync(rawDir).filter((f) => f.endsWith('.png'))) {
     const scene = file.replace('.png', '');
-    const raw = sharp(join(RAW, device, file));
+    const raw = sharp(join(rawDir, file));
     const { width: rw, height: rh } = await raw.metadata();
     const { data: px } = await raw.clone().extract({ left: 2, top: 2, width: 1, height: 1 }).raw().toBuffer({ resolveWithObject: true });
     const light = px[0] > 200 && px[1] > 200 && px[2] > 200;
@@ -103,7 +107,7 @@ for (const [device, d] of Object.entries(DEVICES)) {
 
     const screen = await sharp({ create: { width: screenW0, height: screenH0, channels: 4, background: BG } })
       .composite([
-        { input: Buffer.from(statusBar(screenW0, d.statusBar, light, device)), left: 0, top: 0 },
+        { input: Buffer.from(statusBar(screenW0, d.statusBar, light, d.raw ?? device)), left: 0, top: 0 },
         { input: await raw.toBuffer(), left: 0, top: d.statusBar },
       ])
       .png()

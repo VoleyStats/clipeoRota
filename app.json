@@ -74,6 +74,12 @@
       ]
     ],
     "scheme": "clipeorota",
-    "backgroundColor": "#070A12"
+    "backgroundColor": "#070A12",
+    "extra": {
+      "eas": {
+        "projectId": "646ea714-f250-44de-84d0-59149e639b52"
+      }
+    },
+    "owner": "pauhdr"
   }
 }

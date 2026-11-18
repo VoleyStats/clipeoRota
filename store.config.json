@@ -29,7 +29,7 @@
         "releaseNotes": "Primera versión de Clipeo Rota.",
         "supportUrl": "https://clipeostats.com",
         "marketingUrl": "https://clipeostats.com",
-        "privacyPolicyUrl": "https://clipeostats.com/rota/privacidad"
+        "privacyPolicyUrl": "https://rota.clipeostats.com/privacy"
       },
       "en-US": {
         "title": "Clipeo Rota",
@@ -54,7 +54,7 @@
         "releaseNotes": "First release of Clipeo Rota.",
         "supportUrl": "https://clipeostats.com",
         "marketingUrl": "https://clipeostats.com",
-        "privacyPolicyUrl": "https://clipeostats.com/rota/privacy"
+        "privacyPolicyUrl": "https://rota.clipeostats.com/privacy?lang=en"
       }
     }
   }

@@ -62,6 +62,10 @@ export default function HomeScreen() {
           <RoleCard title={t.coach} hint={t.coachHint} onPress={() => open('entrenador')} />
           <RoleCard title={t.referee} hint={t.refereeHint} onPress={() => open('arbitro')} />
         </View>
+
+        <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} hitSlop={8} style={styles.footer}>
+          <Text style={styles.footerText}>{t.privacy}</Text>
+        </Pressable>
       </ScrollView>
     </Screen>
   );
@@ -103,4 +107,6 @@ const styles = StyleSheet.create({
   cardPressed: { transform: [{ scale: pressScale }] },
   cardTitle: { fontFamily: font.heading, fontSize: 26, color: color.textPrimary },
   cardHint: { fontSize: 15, color: color.textSecondary },
+  footer: { alignSelf: 'center' },
+  footerText: { fontSize: 14, color: color.textMuted, textDecorationLine: 'underline' },
 });

@@ -48,6 +48,7 @@ export const t = {
   rescan: 'Volver a escanear',
   scanTitle: (field: string) => `Escanea el QR del ${field}`,
   close: 'Cerrar',
+  privacy: 'Política de privacidad',
   cameraNeeded: 'Para escanear hace falta permiso de cámara.',
   cameraDenied: Platform.OS === 'web'
     ? 'La cámara está bloqueada para esta página. Permítela desde el candado de la barra de direcciones y vuelve a abrir el escáner.'
