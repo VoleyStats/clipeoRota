@@ -43,3 +43,8 @@ yarn-error.*
 
 # store credentials (EAS submit)
 *service-account*.json
+
+# build artifacts (EAS)
+*.aab
+*.apk
+*.ipa
