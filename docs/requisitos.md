@@ -1,6 +1,6 @@
 # Requerimientos – Clipeo Rota
 
-16 nov 2026 · Borrador v0.4 (v0.2 + decisiones del 16/11)
+19 nov 2026 · Borrador v0.5 (v0.4 + inglés y árbitro en horizontal)
 
 ## 1. Contexto y objetivo
 
@@ -63,6 +63,7 @@ El líbero no entra en la rotación y la app no lo gestiona.
 - RF-10. Si el QR no tiene el formato correcto, o su modalidad o número de zonas no coincide con la modalidad elegida, la app muestra un aviso y no lo carga.
 - RF-11. Si el código de equipo escaneado coincide con el del otro campo, la app avisa (el árbitro puede aceptar o cancelar).
 - RF-12. Cada campo muestra el set del QR. Si los dos equipos han entregado sets distintos, la app lo avisa.
+- RF-13. **Horizontal sin scroll:** en horizontal, los dos equipos se ven a la vez, uno al lado del otro, cada uno en media pantalla. El botón Escanear pasa a la cabecera de cada campo y la pista ocupa el resto; los dorsales se ajustan al tamaño de la zona. En vertical, los campos van uno debajo del otro con scroll.
 
 ## 6. Formato del QR
 
@@ -90,9 +91,9 @@ Un lector rechaza el QR si `app` no es `clipeo-rota`, si no conoce la versión `
 - RNF-01. **Sin conexión:** todo funciona offline. No hay servidor ni cuentas; el QR es la única vía de intercambio.
 - RNF-02. **Plataformas:** iOS y Android, en móvil y tablet, en vertical y horizontal (sin bloquear la orientación).
 - RNF-03. **Legibilidad:** dorsales y QR grandes, para leer o escanear a 1–2 m en un pabellón.
-- RNF-04. **Idioma:** español.
+- RNF-04. **Idioma:** español e inglés. La app sigue el idioma del dispositivo (español si está en español, inglés en otro caso) y se cambia con un selector discreto «ES · EN» al pie de la pantalla inicial y en la política de privacidad. La elección se recuerda.
 - RNF-05. **Permisos:** solo la cámara, y solo en la vista del árbitro.
-- RNF-06. **Datos:** solo se guardan en el dispositivo el perfil, la modalidad, el código de equipo y los dorsales por set. No hay datos personales.
+- RNF-06. **Datos:** solo se guardan en el dispositivo el perfil, la modalidad, el idioma, el código de equipo y los dorsales por set. No hay datos personales.
 
 ## 8. Identidad visual: familia Clipeo
 

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 
-import { t } from '../strings';
+import { useT } from '../strings';
 import { color, font, pressScale, radius, space } from '../ui/theme';
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
 const BACK_SIZE = 40;
 
 export function Screen({ title, back, right, children }: Props) {
+  const t = useT();
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right', 'bottom']}>
       {(back || title || right) && (

@@ -45,7 +45,7 @@ import {
   type CoachState,
 } from '../../core/sets';
 import { savePrefs, usePersistentState } from '../../storage';
-import { t } from '../../strings';
+import { useT } from '../../strings';
 import { confirm, notify } from '../../ui/dialog';
 import { color, font, pressScale, radius, space } from '../../ui/theme';
 
@@ -62,6 +62,7 @@ const SETS = Array.from({ length: MAX_SETS }, (_, i) => i + 1);
  * is left after the controls. The QR opens full screen in its own view.
  */
 function CoachScreen({ mode }: { mode: Mode }) {
+  const t = useT();
   useKeepAwake();
   useEffect(() => {
     savePrefs({ profile: 'entrenador', mode });
@@ -180,7 +181,7 @@ function CoachScreen({ mode }: { mode: Mode }) {
           maxLength={2}
           selectTextOnFocus
           style={[styles.dorsalInput, duplicates.has(zone) && styles.dorsalDuplicate]}
-          accessibilityLabel={`Dorsal ${t.zone(zone).toLowerCase()}`}
+          accessibilityLabel={t.dorsalLabel(zone)}
         />
       )}
     />

@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 
-import { t } from '../strings';
+import { getT } from '../strings';
 
 export interface ConfirmOptions {
   title: string;
@@ -14,7 +14,7 @@ export interface ConfirmOptions {
 /** Asks before doing something; `onConfirm` runs only if the user accepts. See dialog.web.ts for the web version. */
 export function confirm({ title, message, confirmText, destructive, onConfirm }: ConfirmOptions): void {
   Alert.alert(title, message, [
-    { text: t.cancel, style: 'cancel' },
+    { text: getT().cancel, style: 'cancel' },
     { text: confirmText, style: destructive ? 'destructive' : 'default', onPress: onConfirm },
   ]);
 }

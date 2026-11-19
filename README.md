@@ -39,7 +39,7 @@ src/
   core/                Lógica pura y probada: formatos, dorsales, rotación, validación, QR, sets
   components/          Button, Court (pista), Scanner, Screen
   ui/tokens.json       Tokens de diseño sacados del código de Clipeo (colores, radios, espaciados)
-  strings.ts           Todos los textos (español)
+  strings.ts           Todos los textos (español e inglés)
 ```
 
 El formato del QR (`src/core/qr.ts`) es un contrato con Clipeo: cualquier cambio sube la versión `v` y se documenta en la sección 6 de los requisitos.

@@ -2,45 +2,30 @@ import { router, useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Button } from '../components/Button';
+import { LangSwitch } from '../components/LangSwitch';
 import { Screen } from '../components/Screen';
-import { PRIVACY_POLICY, type PolicyLang } from '../privacyPolicy';
+import { PRIVACY_POLICY } from '../privacyPolicy';
+import { isLang, useLang, type Lang } from '../strings';
 import { color, font, space } from '../ui/theme';
-
-/** Device language, used when the URL doesn't say (`?lang=en`). */
-function deviceLang(): PolicyLang {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().locale.toLowerCase().startsWith('es') ? 'es' : 'en';
-  } catch {
-    return 'es';
-  }
-}
 
 /** Privacy policy (https://rota.clipeostats.com/privacy), the same page on the web and in the app. */
 export default function PrivacyRoute() {
   const params = useLocalSearchParams<{ lang?: string }>();
-  const lang: PolicyLang = params.lang === 'en' || params.lang === 'es' ? params.lang : deviceLang();
+  // `?lang=` (links from the store listings) wins over the app language.
+  const appLang = useLang();
+  const lang: Lang = isLang(params.lang) ? params.lang : appLang;
   const policy = PRIVACY_POLICY[lang];
 
   return (
-    <Screen back title={lang === 'es' ? 'Privacidad' : 'Privacy'}>
+    <Screen
+      back
+      title={lang === 'es' ? 'Privacidad' : 'Privacy'}
+      right={<LangSwitch value={lang} onChange={(l) => router.setParams({ lang: l })} style={styles.langs} />}
+    >
       <Head>
         <title>{`${policy.title} · Clipeo Rota`}</title>
       </Head>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.langs}>
-          {(['es', 'en'] as const).map((l) => (
-            <Button
-              key={l}
-              label={l.toUpperCase()}
-              accessibilityLabel={l === 'es' ? 'Español' : 'English'}
-              variant="secondary"
-              pill
-              selected={l === lang}
-              onPress={() => router.setParams({ lang: l })}
-            />
-          ))}
-        </View>
         <Text style={styles.app}>
           Clipeo <Text style={styles.appAccent}>Rota</Text>
         </Text>
@@ -88,7 +73,7 @@ const styles = StyleSheet.create({
     maxWidth: 720,
     alignSelf: 'center',
   },
-  langs: { flexDirection: 'row', gap: space.sm, justifyContent: 'flex-end' },
+  langs: { paddingHorizontal: space.sm },
   app: { fontFamily: font.headingBold, fontSize: 20, color: color.textPrimary },
   appAccent: { color: color.brandBlue },
   title: { fontFamily: font.headingBold, fontSize: 32, color: color.textPrimary },

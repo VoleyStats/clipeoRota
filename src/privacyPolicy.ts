@@ -20,7 +20,7 @@ export interface Policy {
 export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
   es: {
     title: 'Política de privacidad',
-    updated: 'Última actualización: 18 de noviembre de 2026',
+    updated: 'Última actualización: 19 de noviembre de 2026',
     blocks: [
       {
         p: 'Esta política explica qué datos trata Clipeo Rota, en sus apps para iPhone, iPad y Android y en la web rota.clipeostats.com. Clipeo Rota sirve para que el entrenador prepare la rotación de cada set de voleibol y la entregue al árbitro con un código QR.',
@@ -37,7 +37,7 @@ export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
       { p: 'La app guarda solo en tu dispositivo (en la web, en el almacenamiento local del navegador):' },
       {
         li: [
-          'el perfil (entrenador o árbitro) y la modalidad que elegiste por última vez;',
+          'el perfil (entrenador o árbitro), la modalidad y el idioma que elegiste por última vez;',
           'el código de equipo de tres caracteres;',
           'los dorsales de cada zona y de cada set;',
           'en el perfil de árbitro, las dos últimas rotaciones escaneadas.',
@@ -74,7 +74,7 @@ export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
   },
   en: {
     title: 'Privacy Policy',
-    updated: 'Last updated: November 18, 2026',
+    updated: 'Last updated: November 19, 2026',
     blocks: [
       {
         p: 'This policy explains what data Clipeo Rota processes, in its apps for iPhone, iPad and Android and on the website rota.clipeostats.com. Clipeo Rota lets volleyball coaches prepare the rotation for each set and hand it to the referee with a QR code.',
@@ -91,7 +91,7 @@ export const PRIVACY_POLICY: Record<PolicyLang, Policy> = {
       { p: 'The app stores only on your device (on the website, in the browser’s local storage):' },
       {
         li: [
-          'the profile (coach or referee) and the format you chose last;',
+          'the profile (coach or referee), the format and the language you chose last;',
           'the three-character team code;',
           'the player numbers for each zone and each set;',
           'in the referee profile, the last two rotations scanned.',

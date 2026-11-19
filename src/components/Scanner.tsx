@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Linking, Modal, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { t } from '../strings';
+import { useT } from '../strings';
 import { color, font, radius, space } from '../ui/theme';
 import { Button } from './Button';
 
@@ -16,6 +16,7 @@ interface Props {
 
 /** Full-screen QR scanner. Camera permission is only requested here (RNF-05). */
 export function Scanner({ visible, title, onScanned, onClose }: Props) {
+  const t = useT();
   const [permission, requestPermission] = useCameraPermissions();
   // The camera fires many events per second; deliver only the first one per opening.
   const handled = useRef(false);

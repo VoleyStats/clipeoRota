@@ -2,18 +2,27 @@ import { useState, type ReactNode } from 'react';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { FORMATS, type Mode } from '../core/formats';
-import { t } from '../strings';
+import { useT } from '../strings';
 import { color, courtCellSpacing, radius, space } from '../ui/theme';
 
 interface Props {
   mode: Mode;
-  /** Renders the content of one zone (1-based zone number), below its label. */
-  renderZone: (zone: number) => ReactNode;
+  /** Renders the content of one zone (1-based zone number), below its label; `size` is that space once measured. */
+  renderZone: (zone: number, size: ZoneSize | null) => ReactNode;
   style?: StyleProp<ViewStyle>;
   /** Fill the parent's free space (flex: 1) instead of using the width + aspect ratio. */
   fit?: boolean;
   /** Zone being edited, outlined in volt. */
   activeZone?: number | null;
+  /** With `fit`, how much wider than the board's proportions the court may get. */
+  maxStretch?: number;
+  /** Small zone labels in the corner, so the content gets the whole zone (short courts). */
+  cornerLabels?: boolean;
+}
+
+export interface ZoneSize {
+  width: number;
+  height: number;
 }
 
 /** Clipeo's rotation board is 300x350; a little flatter leaves room for the controls. */
@@ -27,7 +36,7 @@ const FIT_SCALE = 0.9; // leave some air around the court when it fills the free
  * 4 pt corners, smaller front row, zone 1 at the back right. Cells use the
  * family blue of the logo (#4A9FEE) with dark text, so the court stands out.
  */
-export function Court({ mode, renderZone, style, fit, activeZone }: Props) {
+export function Court({ mode, renderZone, style, fit, activeZone, cornerLabels, maxStretch = MAX_STRETCH }: Props) {
   const [box, setBox] = useState<{ width: number; height: number } | null>(null);
 
   if (fit) {
@@ -38,9 +47,10 @@ export function Court({ mode, renderZone, style, fit, activeZone }: Props) {
             mode={mode}
             renderZone={renderZone}
             activeZone={activeZone}
+            cornerLabels={cornerLabels}
             style={[
               {
-                width: Math.min(box.width, box.height * ASPECT * MAX_STRETCH) * FIT_SCALE,
+                width: Math.min(box.width, box.height * ASPECT * maxStretch) * FIT_SCALE,
                 height: box.height * FIT_SCALE,
               },
               style,
@@ -55,12 +65,14 @@ export function Court({ mode, renderZone, style, fit, activeZone }: Props) {
       mode={mode}
       renderZone={renderZone}
       activeZone={activeZone}
+            cornerLabels={cornerLabels}
       style={[{ width: '100%', aspectRatio: ASPECT }, style]}
     />
   );
 }
 
-function CourtBody({ mode, renderZone, style, activeZone }: Omit<Props, 'fit'>) {
+function CourtBody({ mode, renderZone, style, activeZone, cornerLabels }: Omit<Props, 'fit' | 'maxStretch'>) {
+  const t = useT();
   const { layout, rowWeights } = FORMATS[mode];
   return (
     <View style={[styles.court, style]}>
@@ -73,14 +85,31 @@ function CourtBody({ mode, renderZone, style, activeZone }: Omit<Props, 'fit'>) 
         {layout.map((row, r) => (
           <View key={r} style={[styles.row, { flex: rowWeights[r] }]}>
             {row.map((zone) => (
-              <View key={zone} style={[styles.cell, zone === activeZone && styles.cellActive]}>
-                <Text style={styles.zoneLabel}>{t.zone(zone)}</Text>
-                <View style={styles.content}>{renderZone(zone)}</View>
+              <View
+                key={zone}
+                style={[styles.cell, cornerLabels && styles.cellCorner, zone === activeZone && styles.cellActive]}
+              >
+                <Text style={[styles.zoneLabel, cornerLabels && styles.zoneLabelCorner]}>{t.zone(zone)}</Text>
+                <ZoneContent zone={zone} renderZone={renderZone} />
               </View>
             ))}
           </View>
         ))}
       </View>
+    </View>
+  );
+}
+
+function ZoneContent({ zone, renderZone }: { zone: number; renderZone: Props['renderZone'] }) {
+  const [size, setSize] = useState<ZoneSize | null>(null);
+  return (
+    <View
+      style={styles.content}
+      onLayout={({ nativeEvent: { layout } }) =>
+        setSize((s) => (s && s.width === layout.width && s.height === layout.height ? s : layout))
+      }
+    >
+      {renderZone(zone, size)}
     </View>
   );
 }
@@ -103,7 +132,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'transparent',
   },
+  cellCorner: { paddingTop: 0 },
   cellActive: { borderColor: color.textPrimary },
   zoneLabel: { fontSize: 11, fontWeight: '600', color: color.courtLabel },
+  zoneLabelCorner: { position: 'absolute', top: 2, left: 4, fontSize: 10, zIndex: 1 },
   content: { flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' },
 });

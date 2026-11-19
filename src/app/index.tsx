@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Dropdown } from '../components/Dropdown';
+import { LangSwitch } from '../components/LangSwitch';
 import { Screen } from '../components/Screen';
 import { MODES, type Mode } from '../core/formats';
 import { loadPrefs, savePrefs, type Profile } from '../storage';
-import { t } from '../strings';
+import { useT } from '../strings';
 import { color, font, pressScale, radius, space } from '../ui/theme';
 
 const DEFAULT_MODE: Mode = '6x6';
-const MODE_OPTIONS = MODES.map((m) => ({ value: m, label: t.modeName(m), detail: m }));
 
 // Only jump to the remembered view on a cold start, not when the user comes
 // back here on purpose to change role or modality.
@@ -18,6 +18,7 @@ let resumed = false;
 
 /** Home: global modality (dropdown) + role, on one screen. */
 export default function HomeScreen() {
+  const t = useT();
   const [ready, setReady] = useState(false);
   const [mode, setMode] = useState<Mode>(DEFAULT_MODE);
 
@@ -32,6 +33,8 @@ export default function HomeScreen() {
   }, []);
 
   if (!ready) return <View style={styles.blank} />;
+
+  const modeOptions = MODES.map((m) => ({ value: m, label: t.modeName(m), detail: m }));
 
   const changeMode = (m: Mode) => {
     setMode(m);
@@ -55,7 +58,7 @@ export default function HomeScreen() {
           <Text style={styles.tagline}>{t.tagline}</Text>
         </View>
 
-        <Dropdown label={t.mode} value={mode} options={MODE_OPTIONS} onChange={changeMode} />
+        <Dropdown label={t.mode} value={mode} options={modeOptions} onChange={changeMode} />
 
         <View style={styles.roles}>
           <Text style={styles.label}>{t.chooseProfile}</Text>
@@ -63,9 +66,13 @@ export default function HomeScreen() {
           <RoleCard title={t.referee} hint={t.refereeHint} onPress={() => open('arbitro')} />
         </View>
 
-        <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} hitSlop={8} style={styles.footer}>
-          <Text style={styles.footerText}>{t.privacy}</Text>
-        </Pressable>
+        <View style={styles.footer}>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} hitSlop={8}>
+            <Text style={[styles.footerText, styles.footerLink]}>{t.privacy}</Text>
+          </Pressable>
+          <Text style={styles.footerText}>·</Text>
+          <LangSwitch />
+        </View>
       </ScrollView>
     </Screen>
   );
@@ -107,6 +114,7 @@ const styles = StyleSheet.create({
   cardPressed: { transform: [{ scale: pressScale }] },
   cardTitle: { fontFamily: font.heading, fontSize: 26, color: color.textPrimary },
   cardHint: { fontSize: 15, color: color.textSecondary },
-  footer: { alignSelf: 'center' },
-  footerText: { fontSize: 14, color: color.textMuted, textDecorationLine: 'underline' },
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.md },
+  footerText: { fontSize: 13, color: color.textMuted },
+  footerLink: { textDecorationLine: 'underline' },
 });

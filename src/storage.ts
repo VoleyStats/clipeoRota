@@ -4,6 +4,7 @@ import { AppState } from 'react-native';
 
 import { isExpired, readStamped, stamp } from './core/expiry';
 import { isMode, type Mode } from './core/formats';
+import { isLang, type Lang } from './strings';
 
 export type Profile = 'entrenador' | 'arbitro';
 
@@ -43,12 +44,18 @@ export interface Prefs {
   mode: Mode | null;
   /** Last view opened, reopened directly on a cold start. */
   profile: Profile | null;
+  /** Language chosen by the user; null follows the device language. */
+  lang: Lang | null;
 }
 
 export async function loadPrefs(): Promise<Prefs> {
   const raw = await loadJSON(PREFS_KEY);
-  const { profile, mode } = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
-  return { profile: isProfile(profile) ? profile : null, mode: isMode(mode) ? mode : null };
+  const { profile, mode, lang } = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
+  return {
+    profile: isProfile(profile) ? profile : null,
+    mode: isMode(mode) ? mode : null,
+    lang: isLang(lang) ? lang : null,
+  };
 }
 
 export async function savePrefs(changes: Partial<Prefs>): Promise<void> {

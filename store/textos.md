@@ -83,7 +83,7 @@ Ya generadas, en `store/screenshots/<idioma>/<dispositivo>/` (`es` y `en`), cinc
 | `ipad/` | App Store, iPad 13" (obligatorio porque la app admite iPad) | 2064 × 2752 |
 | `android/` | Google Play, teléfono | 1080 × 1920 |
 
-La interfaz de la app solo está en español, así que en las capturas en inglés el texto de encima está en inglés y la app sigue en español.
+Las capturas en inglés se hicieron cuando la app solo estaba en español: el texto de encima está en inglés y la app, en español. Ya se pueden rehacer con la app en inglés (`prefs.lang = 'en'` en `scripts/capture-screens.mjs`).
 
 Para regenerarlas (por ejemplo, después de cambiar la interfaz):
 
@@ -126,9 +126,9 @@ Categoría, URLs de soporte y copyright son los mismos que en español.
 | Title | Clipeo Rota: Volleyball Lineup | 30/30 |
 | Short description | Write the rotation for each set and hand it to the referee with a QR. Offline. | 78/80 |
 
-### Description (both stores, 1244 characters)
+### Description (both stores, 1196 characters)
 
-La descripción avisa de que la interfaz está en español, para que nadie la descargue esperando la app en inglés.
+La app está en español y en inglés (sigue el idioma del dispositivo y se cambia con «ES · EN» al pie del inicio).
 
 ```
 Clipeo Rota replaces the paper lineup sheet the coach hands in before every set.
@@ -136,7 +136,7 @@ Clipeo Rota replaces the paper lineup sheet the coach hands in before every set.
 COACH
 • Type each player's number in their zone on the court, and rotate the lineup with one tap, in either direction.
 • Prepare the sets one after another. Repeating the rotation of an earlier set? Open it and use it for the current set.
-• Tap «Mostrar QR» (Show QR): the rotation fills the screen, ready to be scanned from one or two metres away.
+• Tap «Show QR»: the rotation fills the screen, ready to be scanned from one or two metres away.
 • The screen stays on while you prepare the rotation.
 
 REFEREE AND SCORER
@@ -150,7 +150,7 @@ FORMATS
 NO ACCOUNTS, NO CONNECTION
 Everything works offline, even in gyms with no signal. There is no sign-up and no advertising, and the app does not collect personal data: it only stores the team code and the player numbers on your device.
 
-The app's interface is in Spanish. Before using it in competition, check that your federation or league accepts the lineup on a screen.
+Before using it in competition, check that your federation or league accepts the lineup on a screen.
 
 Clipeo Rota is the sister app of Clipeo, volleyball statistics.
 ```
