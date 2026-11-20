@@ -17,7 +17,7 @@ Los textos de App Store también están en `store.config.json` para subirlos con
 | URL de soporte | https://clipeostats.com | — |
 | URL de la política de privacidad | https://rota.clipeostats.com/privacy (página de la propia web, texto en `src/privacyPolicy.ts`) | — |
 | Copyright | 2026 Clipeo | — |
-| Notas de la versión 1.0.0 | Primera versión de Clipeo Rota. | — |
+| Notas de la versión 1.0.1 | • Árbitro en horizontal: los dos equipos uno al lado del otro, sin scroll.<br>• La app ya está en inglés: sigue el idioma del dispositivo y se cambia desde el inicio.<br>• Los datos del partido se borran solos 5 horas después del último cambio. | — |
 
 Las palabras clave no repiten «voleibol» ni «rotación» porque ya están en el nombre y el subtítulo, que Apple también indexa.
 
@@ -115,7 +115,7 @@ Segundo idioma de las dos fichas. En App Store Connect: Información de la app �
 | Promotional text | Set up the rotation for each set and hand it over with a QR code. The referee scans it and has it instantly: no paper, no accounts, no internet. | 144/170 |
 | Keywords | volley,lineup sheet,line-up,rotation,referee,scorer,scoresheet,coach,minivolley,mini,6v6,match,set | 98/100 |
 | Privacy Policy URL | https://rota.clipeostats.com/privacy?lang=en | — |
-| What's New (1.0.0) | First release of Clipeo Rota. | — |
+| What's New (1.0.1) | • Referee in landscape: both teams side by side, no scrolling.<br>• The app is now available in English: it follows your device language and can be switched from the home screen.<br>• Match data is cleared automatically 5 hours after the last change. | — |
 
 Categoría, URLs de soporte y copyright son los mismos que en español.
 

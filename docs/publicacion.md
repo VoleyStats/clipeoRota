@@ -10,7 +10,7 @@ Textos e imágenes de las fichas: [`store/textos.md`](../store/textos.md). Polí
 | --- | --- |
 | Bundle ID (iOS) y paquete (Android) | `com.clipeostats.rota` (no se puede cambiar tras la primera subida) |
 | Cuentas | Las de Clipeo: Apple Developer, Play Console, soporte en hola@clipeostats.com |
-| Versión | `expo.version` en `app.json` (1.0.0). Los números de compilación los lleva EAS (`appVersionSource: remote`, `autoIncrement`) |
+| Versión | `expo.version` en `app.json` (1.0.1). Los números de compilación los lleva EAS (`appVersionSource: remote`, `autoIncrement`) |
 | App Store ID | `6835842145`: en `eas.json` (`submit.production.ios.ascAppId`) y en el banner de Safari de la web (`public/index.html`, `apple-itunes-app`) |
 | Cifrado | `usesNonExemptEncryption: false`: la app no usa cifrado, no hay que presentar documentación de exportación |
 

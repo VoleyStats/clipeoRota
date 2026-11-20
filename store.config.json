@@ -26,7 +26,7 @@
           "6x6",
           "partido"
         ],
-        "releaseNotes": "Primera versión de Clipeo Rota.",
+        "releaseNotes": "• Árbitro en horizontal: los dos equipos uno al lado del otro, sin scroll.\n• La app ya está en inglés: sigue el idioma del dispositivo y se cambia desde el inicio.\n• Los datos del partido se borran solos 5 horas después del último cambio.",
         "supportUrl": "https://clipeostats.com",
         "marketingUrl": "https://clipeostats.com",
         "privacyPolicyUrl": "https://rota.clipeostats.com/privacy"
@@ -51,7 +51,7 @@
           "match",
           "set"
         ],
-        "releaseNotes": "First release of Clipeo Rota.",
+        "releaseNotes": "• Referee in landscape: both teams side by side, no scrolling.\n• The app is now available in English: it follows your device language and can be switched from the home screen.\n• Match data is cleared automatically 5 hours after the last change.",
         "supportUrl": "https://clipeostats.com",
         "marketingUrl": "https://clipeostats.com",
         "privacyPolicyUrl": "https://rota.clipeostats.com/privacy?lang=en"
