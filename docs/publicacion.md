@@ -116,7 +116,7 @@ Si la cuenta de Play Console es **personal y se creó después de noviembre de 2
 
 ## Versiones siguientes
 
-1. Sube `expo.version` en `app.json` (por ejemplo, 1.0.1 o 1.1.0).
+1. Sube `expo.version` en `app.json` y `apple.version` en `store.config.json` (por ejemplo, 1.0.2 o 1.1.0).
 2. `eas build --profile production --platform all` y `eas submit --platform all --latest`.
 3. Actualiza `releaseNotes` en `store.config.json` y `eas metadata:push`.
 
